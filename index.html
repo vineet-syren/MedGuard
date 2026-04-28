@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Content Platform</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'app-primary': '#E95722',
+        'app-accent': '#B94115',
+        'app-ink': '#202124',
+      }
+    }
+  }
+}
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+  * { font-family: 'Roboto', Arial, sans-serif; box-sizing: border-box; }
+  :root {
+    --primary: #E95722;
+    --primary-hover: #C84616;
+    --primary-soft: #FFF0E8;
+    --accent: #B94115;
+    --accent-soft: #FFF5EF;
+    --ink: #202124;
+    --muted: #5F6368;
+    --line: #E8DED8;
+    --soft: #FAF7F5;
+    --surface: #FFFFFF;
+    --success: #188038;
+    --warning: #B94115;
+  }
+  body { background: var(--soft); color: var(--ink); }
+
+  .sidebar { width: 252px; min-width: 252px; background: rgba(255,255,255,.9); backdrop-filter: blur(18px); border-right: 1px solid rgba(229,231,235,.82); }
+  .brand-mark { width: 42px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, #F07A4D, var(--primary)); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; letter-spacing: -0.02em; box-shadow: 0 8px 18px rgba(233,87,34,.18); }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 999px; cursor: pointer; color: var(--muted); font-size: 13px; font-weight: 600; transition: all 0.15s; margin: 2px 10px; border: 1px solid transparent; }
+  .nav-item:hover { background: #F1F3F4; color: var(--ink); border-color: transparent; }
+  .nav-item.active { background: var(--primary-soft); color: var(--primary); border-color: transparent; box-shadow: none; }
+  .nav-icon { width: 26px; height: 26px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: #F1F3F4; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .02em; }
+  .nav-icon svg { width: 15px; height: 15px; stroke-width: 2; }
+  .nav-item.active .nav-icon { background: #FFE1D2; color: var(--primary); }
+
+  .view { display: none; }
+  .view.active { display: flex; flex-direction: column; height: 100%; }
+
+  .module-card { background: white; border-radius: 8px; border: 1px solid var(--line); padding: 14px; cursor: pointer; transition: all 0.15s; }
+  .module-card:hover { border-color: #FFC7AA; box-shadow: 0 1px 2px rgba(32,33,36,.08); transform: translateY(-1px); }
+  .module-card.selected { border-color: var(--primary); background: var(--primary-soft); }
+
+  .asset-card { background: white; border-radius: 8px; border: 1px solid var(--line); padding: 12px 14px; transition: all 0.15s; }
+  .asset-card:hover { border-color: #FFC7AA; box-shadow: 0 1px 2px rgba(32,33,36,.08); }
+
+  .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .badge-approved, .badge-active, .badge-draft, .badge-review, .badge-expired, .badge-warning { background: var(--accent-soft); color: var(--accent); border: 1px solid #FFD6C2; }
+
+  .chat-panel { display: flex; flex-direction: column; background: rgba(255,255,255,.96); border-radius: 14px; border: 1px solid var(--line); overflow: hidden; box-shadow: 0 1px 2px rgba(32,33,36,.06), 0 10px 30px rgba(32,33,36,.035); backdrop-filter: blur(18px); }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+  .chat-msg { max-width: 90%; padding: 10px 14px; border-radius: 12px; font-size: 13.5px; line-height: 1.55; white-space: pre-wrap; }
+  .chat-msg.user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+  .chat-msg.assistant { background: #fff; color: #202124; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid var(--line); box-shadow: none; }
+  .chat-msg.typing { color: #64748B; font-style: italic; }
+  .chat-msg.assistant { white-space: normal; }
+  .chat-msg.assistant .response-title { font-weight: 800; color: #202124; margin: 2px 0 8px; }
+  .chat-msg.assistant .response-section { font-weight: 800; color: #5F6368; margin: 12px 0 5px; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+  .chat-msg.assistant p { margin: 0 0 8px; }
+  .chat-msg.assistant ul { margin: 4px 0 8px 0; padding-left: 0; list-style: none; }
+  .chat-msg.assistant li { position: relative; margin: 5px 0; padding-left: 14px; }
+  .chat-msg.assistant li::before { content: ""; position: absolute; left: 0; top: .72em; width: 4px; height: 4px; border-radius: 50%; background: #98A2B3; }
+  .chat-msg.assistant strong { color: #202124; font-weight: 800; }
+  .chat-input-row { padding: 12px 14px; border-top: 1px solid var(--line); display: flex; gap: 8px; background: #fff; }
+  .chat-input { flex: 1; border: 1px solid var(--line); border-radius: 999px; padding: 9px 14px; font-size: 13px; outline: none; resize: none; line-height: 1.4; background: #FFFFFF; }
+  .chat-input:focus { border-color: var(--primary); background: #fff; }
+  .send-btn { background: var(--primary); color: white; border: none; border-radius: 999px; padding: 9px 18px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+  .send-btn:hover { background: var(--primary-hover); }
+  .send-btn:disabled { background: #B8C1CC; cursor: not-allowed; }
+
+  .quick-prompt { background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; font-size: 12px; line-height: 1.35; color: var(--muted); cursor: pointer; transition: all 0.15s; text-align: left; white-space: normal; max-width: 100%; }
+  .quick-prompt:hover { background: var(--primary-soft); border-color: #FFC7AA; color: var(--primary); }
+
+  .kpi-card { background: white; border-radius: 12px; border: 1px solid var(--line); padding: 18px; box-shadow: 0 1px 2px rgba(60,64,67,.10); }
+  .progress-wrap { margin-top: 12px; }
+  .progress-bar { position: relative; height: 10px; background: linear-gradient(180deg, #F1E9E4, #FAF7F5); border: 1px solid #E8DED8; border-radius: 999px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(60,64,67,.08); }
+  .progress-fill { position: relative; height: 100%; border-radius: 999px; transition: width 0.6s ease; background: linear-gradient(90deg, #F79A70, var(--primary)); box-shadow: 0 0 14px rgba(233,87,34,.22); }
+  .progress-fill::after { content: ""; position: absolute; inset: 1px 2px auto; height: 3px; border-radius: inherit; background: rgba(255,255,255,.45); }
+  .progress-fill.warning { background: linear-gradient(90deg, #FFD7C2, var(--warning)); }
+  .progress-meta { display: flex; justify-content: space-between; align-items: center; color: #8A6F62; font-size: 11px; margin-top: 6px; }
+
+  .pipeline-shell { position: relative; padding: 16px; border-radius: 16px; background: linear-gradient(180deg, rgba(255,245,239,.72), rgba(255,255,255,.9)); border: 1px solid #F1D4C4; overflow-x: auto; }
+  .pipeline-track { position: absolute; left: 34px; right: 34px; top: 58px; height: 8px; border-radius: 999px; background: linear-gradient(90deg, #FFE2D3, #F6B08F, #E95722); box-shadow: inset 0 1px 1px rgba(255,255,255,.65), 0 7px 18px rgba(233,87,34,.14); }
+  .pipeline-row { position: relative; z-index: 1; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(136px, 1fr); gap: 12px; min-width: 1120px; }
+  .pipeline-step { min-height: 112px; border: 1px solid rgba(232,222,216,.9); border-radius: 14px; padding: 12px 10px; background: rgba(255,255,255,.9); display: flex; flex-direction: column; align-items: center; justify-content: space-between; cursor: pointer; transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease; box-shadow: 0 1px 2px rgba(32,33,36,.06); }
+  .pipeline-step:hover { transform: translateY(-2px); border-color: #FFC7AA; box-shadow: 0 10px 24px rgba(233,87,34,.10); }
+  .pipeline-dot { width: 40px; height: 40px; border-radius: 13px; display: flex; align-items: center; justify-content: center; color: #fff; background: linear-gradient(135deg, #F48655, var(--primary)); box-shadow: 0 10px 20px rgba(233,87,34,.18); }
+  .pipeline-dot svg { width: 18px; height: 18px; stroke-width: 2.25; }
+  .pipeline-step.warning .pipeline-dot { background: linear-gradient(135deg, #E7774B, var(--warning)); }
+  .pipeline-title { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; min-height: 28px; padding: 0 2px; }
+  .pipeline-label { color: var(--ink); font-size: 11.5px; font-weight: 800; text-align: center; line-height: 1.12; white-space: normal; min-width: 0; flex: 0 1 auto; overflow-wrap: break-word; }
+  .pipeline-detail { color: #7C6C64; font-size: 10px; text-align: center; line-height: 1.25; max-width: 112px; }
+  .pipeline-status { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; min-width: 22px; height: 18px; border-radius: 999px; padding: 0 6px; color: #fff; background: var(--primary); border: 1px solid rgba(185,65,21,.18); font-size: 9px; font-weight: 900; line-height: 1; box-shadow: 0 5px 12px rgba(233,87,34,.14); }
+  .pipeline-step:nth-child(1) .pipeline-label,
+  .pipeline-step:nth-child(4) .pipeline-label,
+  .pipeline-step:nth-child(5) .pipeline-label { font-size: 11px; line-height: 1.08; }
+  .pipeline-step:nth-child(1) .pipeline-status,
+  .pipeline-step:nth-child(4) .pipeline-status,
+  .pipeline-step:nth-child(5) .pipeline-status { min-width: 20px; height: 17px; font-size: 8px; padding: 0 5px; }
+
+  .canvas-module { background: white; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .remove-btn { background: none; border: none; color: #9AA0A6; cursor: pointer; font-size: 16px; padding: 0 4px; line-height: 1; }
+  .remove-btn:hover { color: #EF4444; }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+
+  .section-header { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #98A2B3; padding: 16px 18px 5px; }
+
+  .compliance-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 8px; border: 1px solid #E2E8F0; background: white; margin-bottom: 6px; }
+  .risk-critical, .risk-high, .risk-medium, .risk-low { border-left: 3px solid var(--primary); }
+
+  .tab-btn { padding: 7px 16px; font-size: 13px; font-weight: 500; border-radius: 6px; cursor: pointer; color: #64748B; background: transparent; border: none; transition: all 0.15s; }
+  .tab-btn.active { background: white; color: #1E293B; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+
+  .field-label { font-size: 12px; font-weight: 600; color: #64748B; margin-bottom: 4px; }
+  input, textarea, select { outline: none; }
+  input:focus, textarea:focus, select:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(233,87,34,.14); }
+  .bg-white.rounded-xl, .bg-white.rounded-lg { border-color: var(--line) !important; border-radius: 12px !important; box-shadow: 0 1px 2px rgba(60,64,67,.10); }
+  .top-pill { border: 1px solid var(--line); background: #fff; color: var(--ink); }
+  button[style*="background"] { background: var(--primary) !important; }
+  div[style*="background:#FFFFFF"], div[style*="background:#F8FAFC"] { background: #fff !important; }
+  .w-7[style*="background"], .w-10[style*="background"] { background: var(--primary-soft) !important; color: var(--primary) !important; }
+  .w-7.text-white[style*="background"], .w-10.text-white[style*="background"] { background: var(--primary) !important; color: #fff !important; }
+  .text-3xl[style*="color"] { color: var(--primary) !important; }
+  .bg-green-500, .bg-orange-500, .bg-orange-500, .bg-purple-500, .bg-yellow-500, .bg-red-500 { background-color: var(--primary) !important; }
+  .bg-green-50, .bg-orange-50, .bg-red-50, .bg-indigo-50, .bg-yellow-50, .bg-orange-50, .bg-purple-50 { background-color: #FFFFFF !important; }
+  .bg-green-100, .bg-orange-100, .bg-red-100, .bg-indigo-100, .bg-orange-100, .bg-purple-100 { background-color: var(--primary-soft) !important; }
+  .text-green-600, .text-green-700, .text-red-500, .text-red-600, .text-red-700, .text-orange-700, .text-amber-700, .text-orange-700, .text-orange-700, .text-orange-700, .text-violet-700, .text-teal-700, .text-emerald-700, .text-indigo-600, .text-indigo-700 { color: var(--primary) !important; }
+  .border-indigo-100, .border-red-200 { border-color: var(--line) !important; }
+  .app-topbar { background: rgba(255,255,255,.94); backdrop-filter: blur(18px); border-bottom: 1px solid var(--line); }
+  .glass-card { background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 1px 2px rgba(32,33,36,.06), 0 12px 28px rgba(32,33,36,.035); backdrop-filter: blur(18px); }
+  .metric-value { font-size: clamp(24px, 2.4vw, 32px); line-height: 1; font-weight: 700; letter-spacing: -0.02em; color: var(--primary); }
+  .llm-select { margin-left: auto; border: 1px solid var(--line); background: #FFFFFF; color: #202124; border-radius: 999px; padding: 6px 28px 6px 10px; font-size: 11px; font-weight: 600; max-width: 172px; outline: none; }
+  .llm-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(233,87,34,.14); }
+  .chart-card { min-height: 260px; }
+  .data-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; }
+  .data-table th { text-align: left; color: #5F6368; font-weight: 700; padding: 10px 12px; border-bottom: 1px solid var(--line); background: #FAFAFA; }
+  .data-table td { padding: 11px 12px; border-bottom: 1px solid var(--line); color: #202124; }
+  .data-table tr:last-child td { border-bottom: 0; }
+  .soft-chip { display: inline-flex; align-items: center; border-radius: 999px; padding: 3px 8px; background: var(--accent-soft); color: var(--accent); border: 1px solid #FFD6C2; font-size: 11px; font-weight: 700; }
+  .area-chart path.line { stroke: var(--primary); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .area-chart path.area { fill: url(#chartGradient); opacity: .92; }
+  .media-preview { min-height: 320px; display: grid; place-items: center; border: 1px dashed var(--line); border-radius: 16px; background: rgba(255,255,255,.55); overflow: hidden; }
+  .media-preview img { width: 100%; height: 100%; max-height: 420px; object-fit: contain; }
+  .icon-tile svg { width: 17px; height: 17px; }
+  .prompt-library { max-height: 188px; overflow-y: auto; padding-right: 3px; display: flex; flex-direction: column; gap: 6px; }
+  .prompt-card { width: 100%; text-align: left; border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 9px 10px; cursor: pointer; transition: all .15s; }
+  .prompt-card:hover { border-color: #FFC7AA; background: var(--primary-soft); }
+  .prompt-card-title { font-size: 12px; font-weight: 800; color: var(--ink); }
+  .prompt-card-sub { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+  .guardrail-item { display: flex; align-items: flex-start; gap: 10px; border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 9px 10px; cursor: pointer; }
+  .guardrail-item input { width: 14px; height: 14px; margin: 2px 0 0; flex: 0 0 14px; accent-color: var(--primary); }
+  .guardrail-copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .guardrail-title { display: block; font-size: 11px; font-weight: 800; color: var(--ink); line-height: 1.15; }
+  .guardrail-sub { display: block; font-size: 10px; color: var(--muted); line-height: 1.25; }
+  .handoff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+</style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<div class="sidebar flex flex-col py-4 overflow-y-auto flex-shrink-0">
+  <!-- Logo -->
+  <div class="px-4 mb-4">
+    <div class="flex items-center gap-3 px-2 py-2">
+      <div class="brand-mark text-sm">AI</div>
+      <div>
+        <div class="text-slate-900 font-bold text-sm leading-tight">Content Studio</div>
+        <div class="text-xs leading-tight text-slate-500">AI content operations</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">Overview</div>
+  <div class="nav-item active" onclick="navigate('admin')" id="nav-admin">
+    <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span> Admin Dashboard
+  </div>
+
+  <div class="section-header">Workflows</div>
+  <div class="nav-item" onclick="navigate('content-lab')" id="nav-content-lab">
+    <span class="nav-icon"><i data-lucide="blocks"></i></span> Content Lab
+  </div>
+  <div class="nav-item" onclick="navigate('dam')" id="nav-dam">
+    <span class="nav-icon"><i data-lucide="folder-kanban"></i></span> Asset Management
+  </div>
+  <div class="nav-item" onclick="navigate('scp')" id="nav-scp">
+    <span class="nav-icon"><i data-lucide="microscope"></i></span> Sci Comm (SCP)
+  </div>
+  <div class="nav-item" onclick="navigate('evidence')" id="nav-evidence">
+    <span class="nav-icon"><i data-lucide="book-open-check"></i></span> Evidence Synthesis
+  </div>
+  <div class="nav-item" onclick="navigate('email-qa')" id="nav-email-qa">
+    <span class="nav-icon"><i data-lucide="mail-check"></i></span> Email QA
+  </div>
+  <div class="nav-item" onclick="navigate('compliance')" id="nav-compliance">
+    <span class="nav-icon"><i data-lucide="shield-check"></i></span> Compliance (MLR)
+  </div>
+  <div class="nav-item" onclick="navigate('localization')" id="nav-localization">
+    <span class="nav-icon"><i data-lucide="languages"></i></span> Localisation
+  </div>
+  <div class="nav-item" onclick="navigate('analytics')" id="nav-analytics">
+    <span class="nav-icon"><i data-lucide="chart-no-axes-combined"></i></span> Analytics
+  </div>
+
+  <div class="section-header">Experimental</div>
+  <div class="nav-item" onclick="navigate('media')" id="nav-media">
+    <span class="nav-icon"><i data-lucide="flask-conical"></i></span> Visual Concept Studio
+  </div>
+
+  <div class="mt-auto px-4 pt-4 border-t border-slate-200 mx-2">
+    <div class="flex items-center gap-2">
+      <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:#E95722">WS</div>
+      <div>
+        <div class="text-slate-800 text-xs font-semibold">Workspace</div>
+        <div class="text-xs text-slate-500">Content Ops</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ MAIN CONTENT ═══════════════════ -->
+<div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+  <!-- Top Bar -->
+  <div class="app-topbar px-6 py-3 flex items-center justify-between flex-shrink-0">
+    <div>
+      <div id="topbar-title" class="font-bold text-slate-800 text-base">Admin Dashboard</div>
+      <div id="topbar-sub" class="text-xs text-slate-500 mt-0.5">End-to-end content workflow orchestration</div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="hidden lg:flex items-center gap-4 text-xs font-semibold text-slate-600">
+        <span>Workspace</span>
+        <span>Review queue</span>
+        <span>Help</span>
+      </div>
+      <div class="text-xs font-semibold px-3 py-1.5 rounded-full top-pill">Content Operations</div>
+      <div class="w-2 h-2 rounded-full bg-green-500"></div>
+      <div class="text-xs text-slate-500">Pipeline Health: <span id="health-pct" class="font-bold text-slate-700">78%</span></div>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="flex-1 overflow-y-auto p-5">
+
+    <!-- ══════════ ADMIN DASHBOARD ══════════ -->
+    <div id="view-admin" class="view active">
+      <!-- Hero Metrics -->
+      <div class="grid grid-cols-4 gap-4 mb-5">
+        <div class="glass-card p-4">
+          <div class="metric-value">12</div>
+          <div class="text-xs font-600 text-slate-500 mt-1">Active Campaigns</div>
+        </div>
+        <div class="glass-card p-4">
+          <div class="metric-value">94.1%</div>
+          <div class="text-xs text-slate-500 mt-1">Compliance Pass Rate</div>
+        </div>
+        <div class="glass-card p-4">
+          <div class="metric-value">7.8d</div>
+          <div class="text-xs text-slate-500 mt-1">Avg MLR Cycle Time</div>
+        </div>
+        <div class="glass-card p-4">
+          <div class="metric-value" style="color:#202124">2,847</div>
+          <div class="text-xs text-slate-500 mt-1">Total Assets in DAM</div>
+        </div>
+      </div>
+
+      <!-- Pipeline Visualisation -->
+      <div class="glass-card p-5 mb-5">
+        <div class="flex items-start justify-between gap-4 mb-4">
+          <div>
+            <div class="font-semibold text-slate-800 text-sm">End-to-End Content Pipeline</div>
+            <div class="text-xs text-slate-500 mt-1">Core production flow from modular assembly through evidence, review, localisation, and performance measurement.</div>
+          </div>
+          <span class="soft-chip">78% healthy</span>
+        </div>
+        <div class="pipeline-shell">
+          <div class="pipeline-track"></div>
+          <div class="pipeline-row" id="pipeline-row"></div>
+        </div>
+      </div>
+
+      <!-- Module Status Grid -->
+      <div class="grid grid-cols-4 gap-3 mb-5" id="admin-module-grid"></div>
+
+      <!-- Performance Intelligence -->
+      <div class="grid grid-cols-5 gap-4 mb-5">
+        <div class="glass-card chart-card p-5 col-span-3">
+          <div class="flex items-start justify-between mb-4">
+            <div>
+              <div class="font-semibold text-slate-800 text-sm">Workflow Throughput</div>
+              <div class="text-xs text-slate-500 mt-1">Approved assets and review velocity · last 8 weeks</div>
+            </div>
+            <span class="soft-chip">+12% reuse</span>
+          </div>
+          <svg class="area-chart w-full" viewBox="0 0 640 180" preserveAspectRatio="none" aria-label="Workflow throughput chart">
+            <defs>
+              <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#E95722" stop-opacity=".24"/>
+                <stop offset="100%" stop-color="#E95722" stop-opacity=".02"/>
+              </linearGradient>
+            </defs>
+            <path class="area" d="M0,145 C70,136 92,96 150,104 C220,116 244,62 310,72 C375,82 398,44 465,54 C535,64 575,32 640,38 L640,180 L0,180 Z"/>
+            <path class="line" d="M0,145 C70,136 92,96 150,104 C220,116 244,62 310,72 C375,82 398,44 465,54 C535,64 575,32 640,38"/>
+            <g stroke="#DADCE0" stroke-width="1">
+              <line x1="0" y1="150" x2="640" y2="150"/>
+              <line x1="0" y1="100" x2="640" y2="100"/>
+              <line x1="0" y1="50" x2="640" y2="50"/>
+            </g>
+          </svg>
+          <div class="grid grid-cols-4 gap-3 mt-3 text-xs">
+            <div><div class="font-bold text-slate-800">142</div><div class="text-slate-500">Approved MTD</div></div>
+            <div><div class="font-bold text-slate-800">68%</div><div class="text-slate-500">Reuse rate</div></div>
+            <div><div class="font-bold text-slate-800">7.8d</div><div class="text-slate-500">MLR cycle</div></div>
+            <div><div class="font-bold text-slate-800">34.2%</div><div class="text-slate-500">HCP open rate</div></div>
+          </div>
+        </div>
+        <div class="glass-card p-5 col-span-2">
+          <div class="font-semibold text-slate-800 text-sm mb-3">Priority Work Queue</div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Asset</th><th>Owner</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Saudi Oncology Adaptation</td><td>Localisation</td><td><span class="soft-chip">MLR</span></td></tr>
+              <tr><td>Jemperli MOA Animation</td><td>DAM</td><td><span class="soft-chip">Metadata</span></td></tr>
+              <tr><td>India Asthma Module</td><td>Content Lab</td><td><span class="soft-chip">Review</span></td></tr>
+              <tr><td>Arexvy Phase III Summary</td><td>SCP</td><td><span class="soft-chip">Renewal</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Bottom row: activity + AI -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-white rounded-xl border border-slate-200 p-4">
+          <div class="font-semibold text-slate-700 text-sm mb-3">Recent Activity</div>
+          <div class="space-y-2">
+            <div class="flex items-start gap-2 text-xs"><div class="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 flex-shrink-0"></div><div><span class="font-medium text-slate-700">Shingrix HCP Email</span> — approved by MLR · <span class="text-slate-400">2m ago</span></div></div>
+            <div class="flex items-start gap-2 text-xs"><div class="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1.5 flex-shrink-0"></div><div><span class="font-medium text-slate-700">India Asthma Module</span> — localisation submitted · <span class="text-slate-400">18m ago</span></div></div>
+            <div class="flex items-start gap-2 text-xs"><div class="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1.5 flex-shrink-0"></div><div><span class="font-medium text-slate-700">Jemperli MOA Animation</span> — DAM upload pending metadata · <span class="text-slate-400">34m ago</span></div></div>
+            <div class="flex items-start gap-2 text-xs"><div class="w-1.5 h-1.5 rounded-full bg-purple-500 mt-1.5 flex-shrink-0"></div><div><span class="font-medium text-slate-700">RSV Congress Slides</span> — deployed to 3 markets · <span class="text-slate-400">1h ago</span></div></div>
+            <div class="flex items-start gap-2 text-xs"><div class="w-1.5 h-1.5 rounded-full bg-yellow-500 mt-1.5 flex-shrink-0"></div><div><span class="font-medium text-slate-700">Saudi Oncology Adaptation</span> — compliance review started · <span class="text-slate-400">2h ago</span></div></div>
+            <div class="flex items-start gap-2 text-xs"><div class="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 flex-shrink-0"></div><div><span class="font-medium text-slate-700">Arexvy Phase III Summary</span> — EXPIRED · renewal required · <span class="text-slate-400">3h ago</span></div></div>
+          </div>
+        </div>
+        <div class="chat-panel" style="min-height:300px">
+          <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFFFFF">
+            <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold text-white" style="background:#5F6368">AD</div>
+            <div><div class="font-semibold text-sm text-slate-800">Ops Orchestrator</div><div class="text-xs text-slate-400">End-to-end pipeline intelligence</div></div>
+          </div>
+          <div class="chat-messages" id="chat-admin" style="max-height:220px">
+            <div class="chat-msg assistant">Hi! I'm your Content Operations Orchestrator. I have visibility across the production workflow — Content Lab, DAM, SCP, Evidence Synthesis, Email QA, Compliance, Localisation, and Analytics. Experimental concepting sits separately in Visual Concept Studio.<br><br>Ask me about pipeline status, bottlenecks, or campaign readiness.</div>
+          </div>
+          <div class="px-3 py-2 flex flex-wrap gap-1.5">
+            <button class="quick-prompt" onclick="fillPrompt('admin', this)">Act as a content operations lead. Review the current pipeline and list the top 3 bottlenecks, likely root causes, owners, and next actions for this week.</button>
+            <button class="quick-prompt" onclick="fillPrompt('admin', this)">Identify which assets are most at risk of missing go-live based on MLR queue, localisation backlog, DAM metadata, and campaign readiness.</button>
+            <button class="quick-prompt" onclick="fillPrompt('admin', this)">Create a production handoff plan for AsterResp COPD across Content Lab, DAM, Medical, Compliance, Localisation, and Analytics.</button>
+          </div>
+          <div class="chat-input-row">
+            <textarea class="chat-input" id="input-admin" rows="1" placeholder="Ask the Ops Orchestrator..." onkeydown="handleKey(event,'admin')"></textarea>
+            <button class="send-btn" id="send-admin" onclick="sendMessage('admin')">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ CONTENT LAB ══════════ -->
+    <div id="view-content-lab" class="view">
+      <div class="grid grid-cols-5 gap-4 h-full" style="min-height:calc(100vh - 140px)">
+        <!-- Left: Module Library + Canvas -->
+        <div class="col-span-3 flex flex-col gap-4">
+          <!-- Controls -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <div class="font-semibold text-slate-800">Module Library</div>
+                <div class="text-xs text-slate-500 mt-0.5">Pre-approved Lego bricks — click to add to canvas</div>
+              </div>
+              <div class="flex items-center gap-2">
+                <select class="text-xs border border-slate-200 rounded-lg px-3 py-1.5 text-slate-600" id="module-filter-ta" onchange="filterModules()">
+                  <option value="">All Therapeutic Areas</option>
+                  <option>Respiratory</option><option>Vaccines</option><option>Oncology</option><option>Immunology</option><option>Global</option>
+                </select>
+                <select class="text-xs border border-slate-200 rounded-lg px-3 py-1.5 text-slate-600" id="module-filter-type" onchange="filterModules()">
+                  <option value="">All Types</option>
+                  <option>Claim</option><option>Safety</option><option>Brand</option><option>Legal</option><option>Visual</option><option>Reference</option><option>CTA</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2 max-h-64 overflow-y-auto" id="module-library"></div>
+          </div>
+
+          <!-- Assembly Canvas -->
+          <div class="bg-white rounded-xl border-2 border-dashed border-slate-300 p-4 flex-1">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <div class="font-semibold text-slate-800">Assembly Canvas</div>
+                <div class="text-xs text-slate-500">Build your asset from selected modules</div>
+              </div>
+              <div class="flex items-center gap-2">
+                <select class="text-xs border border-slate-200 rounded-lg px-3 py-1.5 text-slate-600" id="channel-select">
+                  <option>Select Channel…</option>
+                  <option>eDetail Aid (eDA)</option><option>Email</option><option>Remote Detailing</option><option>Social Media</option><option>Congress</option><option>Print</option>
+                </select>
+                <button onclick="clearCanvas()" class="text-xs text-red-500 border border-red-200 rounded-lg px-3 py-1.5 hover:bg-red-50">Clear</button>
+                <button onclick="submitForReview()" class="text-xs text-white rounded-lg px-3 py-1.5 font-semibold" style="background:#E95722">Submit for MLR</button>
+              </div>
+            </div>
+            <div class="space-y-2 min-h-16" id="assembly-canvas">
+              <div class="text-center py-8 text-sm text-slate-400" id="canvas-empty">Select modules from the library above to begin assembling your asset.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Persona + AI Chat -->
+        <div class="col-span-2 flex flex-col gap-3">
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-orange-700" style="background:#FFF0E8">CL</div>
+              <div>
+                <div class="font-bold text-slate-800 text-sm">Content Strategist</div>
+                <div class="text-xs text-slate-500">Omnichannel Content Manager · Veeva Vault</div>
+              </div>
+              <span class="badge badge-active ml-auto">Active</span>
+            </div>
+            <div class="mt-3 text-xs text-slate-600 leading-relaxed">Responsible for assembling pre-approved modular content into channel-ready assets. Owns the 7-8 day MLR cycle and multi-market content reuse strategy.</div>
+          </div>
+          <div class="chat-panel flex-1">
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFFFFF">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold text-white" style="background:#175CD3">CL</div>
+              <div><div class="font-semibold text-sm text-slate-800">Content Lab AI</div><div class="text-xs text-slate-400">Module assembly & channel strategy</div></div>
+            </div>
+            <div class="chat-messages flex-1" id="chat-content-lab">
+              <div class="chat-msg assistant">Welcome to Content Lab! I can help you select the right pre-approved modules, optimise for your target channel, and flag reuse opportunities across markets.<br><br>What asset are you building today?</div>
+            </div>
+            <div class="px-3 py-2 flex flex-wrap gap-1.5">
+              <button class="quick-prompt" onclick="fillPrompt('content-lab', this)">Suggest a modular content package for a COPD eDetailAid targeting pulmonologists: claim blocks, safety module, evidence block, visual module, CTA, and reuse opportunities.</button>
+              <button class="quick-prompt" onclick="fillPrompt('content-lab', this)">Map which modules from an HCP email can be reused in a social post, eDetail aid, and congress leave-behind while preserving compliance and reference links.</button>
+              <button class="quick-prompt" onclick="fillPrompt('content-lab', this)">Draft an agency brief for a vaccine awareness campaign: audience, channels, modular assets needed, MLR expectations, references, and localisation considerations.</button>
+            </div>
+            <div class="chat-input-row">
+              <textarea class="chat-input" id="input-content-lab" rows="1" placeholder="Ask Content Lab AI…" onkeydown="handleKey(event,'content-lab')"></textarea>
+              <button class="send-btn" id="send-content-lab" onclick="sendMessage('content-lab')">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ DAM ══════════ -->
+    <div id="view-dam" class="view">
+      <div class="grid grid-cols-5 gap-4" style="min-height:calc(100vh - 140px)">
+        <div class="col-span-3 flex flex-col gap-4">
+          <!-- Search + Filters -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex gap-3 mb-3">
+              <input id="dam-search" type="text" placeholder="Search assets…" class="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-sm" oninput="filterDAMAssets()">
+              <select class="text-xs border border-slate-200 rounded-lg px-3 py-2 text-slate-600" id="dam-filter-status" onchange="filterDAMAssets()">
+                <option value="">All Status</option>
+                <option>Approved</option><option>Draft</option><option>In Review</option><option>Expired</option>
+              </select>
+              <select class="text-xs border border-slate-200 rounded-lg px-3 py-2 text-slate-600" id="dam-filter-ta" onchange="filterDAMAssets()">
+                <option value="">All Therapeutic Areas</option>
+                <option>Respiratory</option><option>Vaccines</option><option>Oncology</option><option>Immunology</option>
+              </select>
+              <select class="text-xs border border-slate-200 rounded-lg px-3 py-2 text-slate-600" id="dam-filter-region" onchange="filterDAMAssets()">
+                <option value="">All Regions</option>
+                <option>Global</option><option>UK</option><option>US</option><option>India</option><option>Saudi Arabia</option>
+              </select>
+            </div>
+            <div class="text-xs text-slate-400" id="dam-count">Loading assets…</div>
+          </div>
+          <!-- Asset Grid -->
+          <div class="flex-1 overflow-y-auto">
+            <div class="grid grid-cols-1 gap-2" id="dam-asset-grid"></div>
+          </div>
+        </div>
+
+        <div class="col-span-2 flex flex-col gap-3">
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-violet-700" style="background:#FFF0E8">DA</div>
+              <div>
+                <div class="font-bold text-slate-800 text-sm">DAM Specialist</div>
+                <div class="text-xs text-slate-500">Taxonomy & Asset Governance · Global</div>
+              </div>
+            </div>
+            <div class="mt-3 text-xs text-slate-600 leading-relaxed">Maintains the global content taxonomy, metadata standards, and lifecycle governance across 2,800+ digital assets. Ensures regulatory compliance through strict lifecycle controls.</div>
+            <div class="mt-3 grid grid-cols-3 gap-2 text-center">
+              <div class="bg-slate-50 rounded-lg p-2"><div class="font-bold text-slate-800 text-sm">2,847</div><div class="text-xs text-slate-400">Total Assets</div></div>
+              <div class="bg-yellow-50 rounded-lg p-2"><div class="font-bold text-yellow-700 text-sm">14</div><div class="text-xs text-slate-400">Expiring Soon</div></div>
+              <div class="bg-red-50 rounded-lg p-2"><div class="font-bold text-red-600 text-sm">3</div><div class="text-xs text-slate-400">Expired</div></div>
+            </div>
+          </div>
+          <div class="chat-panel flex-1">
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFFFFF">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs" style="background:#E95722; color:white; font-weight:700">DA</div>
+              <div><div class="font-semibold text-sm text-slate-800">DAM Taxonomy AI</div><div class="text-xs text-slate-400">Metadata, governance & discoverability</div></div>
+            </div>
+            <div class="chat-messages flex-1" id="chat-dam">
+              <div class="chat-msg assistant">I'm your DAM Taxonomy specialist. I can help you tag assets correctly, identify metadata gaps, flag expiring content, and ensure global taxonomy consistency.<br><br>What would you like to work on?</div>
+            </div>
+            <div class="px-3 py-2 flex flex-wrap gap-1.5">
+              <button class="quick-prompt" onclick="fillPrompt('dam', this)">Audit a newly uploaded HCP video asset and list required DAM metadata: therapeutic area, audience, market, claim tags, usage rights, expiry date, references, and owner.</button>
+              <button class="quick-prompt" onclick="fillPrompt('dam', this)">Find likely governance risks in a DAM library with 2,800 assets: expiring content, missing references, duplicate modules, outdated claims, and market restrictions.</button>
+              <button class="quick-prompt" onclick="fillPrompt('dam', this)">Recommend taxonomy tags for an oncology HCP brochure covering patient journey, biomarker testing, safety, efficacy, congress use, and India/UK localisation.</button>
+            </div>
+            <div class="chat-input-row">
+              <textarea class="chat-input" id="input-dam" rows="1" placeholder="Ask DAM Taxonomy AI…" onkeydown="handleKey(event,'dam')"></textarea>
+              <button class="send-btn" id="send-dam" onclick="sendMessage('dam')">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ SCP ══════════ -->
+    <div id="view-scp" class="view">
+      <div class="grid grid-cols-5 gap-4" style="min-height:calc(100vh - 140px)">
+        <div class="col-span-3 flex flex-col gap-4">
+          <!-- IMCP Planner -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="font-semibold text-slate-800 text-sm mb-1">Integrated Medical Communication Plan (IMCP)</div>
+            <div class="text-xs text-slate-500 mb-3">Strategic roadmap for scientific narrative deployment across channels and markets</div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs">
+                <thead><tr class="bg-slate-50">
+                  <th class="text-left p-2 text-slate-600 font-semibold rounded-tl-lg">Tactic</th>
+                  <th class="text-left p-2 text-slate-600 font-semibold">Audience</th>
+                  <th class="text-left p-2 text-slate-600 font-semibold">Channel</th>
+                  <th class="text-left p-2 text-slate-600 font-semibold">Quarter</th>
+                  <th class="text-left p-2 text-slate-600 font-semibold rounded-tr-lg">Status</th>
+                </tr></thead>
+                <tbody class="divide-y divide-slate-100">
+                  <tr><td class="p-2 text-slate-700 font-medium">RSV Phase III Key Data</td><td class="p-2 text-slate-500">Pulmonologist</td><td class="p-2 text-slate-500">Congress</td><td class="p-2 text-slate-500">Q2 2026</td><td class="p-2"><span class="badge badge-approved">Approved</span></td></tr>
+                  <tr><td class="p-2 text-slate-700 font-medium">COPD Scientific Narrative</td><td class="p-2 text-slate-500">GP / Specialist</td><td class="p-2 text-slate-500">eDA + Email</td><td class="p-2 text-slate-500">Q2 2026</td><td class="p-2"><span class="badge badge-review">In Review</span></td></tr>
+                  <tr><td class="p-2 text-slate-700 font-medium">Oncology Unmet Need Brief</td><td class="p-2 text-slate-500">Oncologist</td><td class="p-2 text-slate-500">Medical</td><td class="p-2 text-slate-500">Q3 2026</td><td class="p-2"><span class="badge badge-draft">Draft</span></td></tr>
+                  <tr><td class="p-2 text-slate-700 font-medium">Vaccines HCP Education</td><td class="p-2 text-slate-500">GP + Nurse</td><td class="p-2 text-slate-500">Webinar</td><td class="p-2 text-slate-500">Q3 2026</td><td class="p-2"><span class="badge badge-draft">Draft</span></td></tr>
+                  <tr><td class="p-2 text-slate-700 font-medium">Immunology Patient Journey</td><td class="p-2 text-slate-500">Rheumatologist</td><td class="p-2 text-slate-500">Multi-channel</td><td class="p-2 text-slate-500">Q4 2026</td><td class="p-2"><span class="badge badge-draft">Planned</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Scientific Narrative Builder -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 flex-1">
+            <div class="font-semibold text-slate-800 text-sm mb-1">Scientific Narrative Builder</div>
+            <div class="text-xs text-slate-500 mb-3">Draft evidence-based messaging for your Scientific Communication Platform</div>
+            <div class="grid grid-cols-2 gap-3 mb-3">
+              <div>
+                <div class="field-label">Product / Therapeutic Area</div>
+                <input type="text" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="e.g. Shingrix · Vaccines" id="scp-product">
+              </div>
+              <div>
+                <div class="field-label">Target Audience</div>
+                <select class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" id="scp-audience">
+                  <option>Pulmonologist</option><option>GP / Family Physician</option><option>Oncologist</option><option>Rheumatologist</option><option>Nurse / NP</option><option>Patient</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-label">Core Scientific Claim / Data Point</div>
+            <textarea class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm mb-2 resize-none" rows="3" id="scp-claim" placeholder="Enter the key clinical data or claim you want to communicate…"></textarea>
+            <button onclick="buildNarrative()" class="text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#E95722">Build Narrative</button>
+          </div>
+        </div>
+
+        <div class="col-span-2 flex flex-col gap-3">
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-teal-700" style="background:#FFF0E8">SC</div>
+              <div>
+                <div class="font-bold text-slate-800 text-sm">Medical Affairs Director</div>
+                <div class="text-xs text-slate-500">Scientific Communications · Global Oncology / Vaccines</div>
+              </div>
+            </div>
+            <div class="mt-3 text-xs text-slate-600 leading-relaxed">Drives IMCP development, scientific narrative strategy, and congress planning. Acts as strategic thought partner interpreting emerging clinical data to inform product strategy.</div>
+          </div>
+          <div class="chat-panel flex-1">
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFF0E8">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#E95722">SC</div>
+              <div><div class="font-semibold text-sm text-slate-800">SCP / Medical Affairs AI</div><div class="text-xs text-slate-400">Evidence-based scientific narratives</div></div>
+            </div>
+            <div class="chat-messages flex-1" id="chat-scp">
+              <div class="chat-msg assistant">Hello! I'm your Medical Affairs AI. I support scientific narrative development, IMCP planning, and evidence-based communications for therapeutic portfolio.<br><br>Every claim I help draft will be evidence-based and referenced.</div>
+            </div>
+            <div class="px-3 py-2 flex flex-wrap gap-1.5">
+              <button class="quick-prompt" onclick="fillPrompt('scp', this)">Draft a scientific narrative for an RSV prevention education platform in adults 60+: unmet need, evidence hierarchy, HCP relevance, claim guardrails, and reference placeholders.</button>
+              <button class="quick-prompt" onclick="fillPrompt('scp', this)">Identify gaps in a respiratory Scientific Communication Platform before a Q3 congress: evidence gaps, audience questions, competitor context, and content opportunities.</button>
+              <button class="quick-prompt" onclick="fillPrompt('scp', this)">Build an IMCP outline for an oncology congress: key narrative, priority tactics, audience segments, channel mix, evidence needs, and medical review checkpoints.</button>
+            </div>
+            <div class="chat-input-row">
+              <textarea class="chat-input" id="input-scp" rows="1" placeholder="Ask Medical Affairs AI…" onkeydown="handleKey(event,'scp')"></textarea>
+              <button class="send-btn" id="send-scp" onclick="sendMessage('scp')">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ EVIDENCE SYNTHESIS ══════════ -->
+    <div id="view-evidence" class="view">
+      <div class="grid grid-cols-5 gap-4" style="min-height:calc(100vh - 140px)">
+        <div class="col-span-3 flex flex-col gap-4">
+          <!-- PICO Framework -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="font-semibold text-slate-800 text-sm mb-1">PICO Framework Builder</div>
+            <div class="text-xs text-slate-500 mb-3">Structure your systematic review query · AI screens abstracts and extracts data</div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <div class="field-label">P — Population</div>
+                <input type="text" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="e.g. Adults 60+ with severe asthma" id="pico-p">
+              </div>
+              <div>
+                <div class="field-label">I — Intervention</div>
+                <input type="text" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="e.g. Dupilumab 300mg SC Q2W" id="pico-i">
+              </div>
+              <div>
+                <div class="field-label">C — Comparison</div>
+                <input type="text" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="e.g. Placebo or standard of care" id="pico-c">
+              </div>
+              <div>
+                <div class="field-label">O — Outcome</div>
+                <input type="text" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="e.g. Annualised exacerbation rate reduction" id="pico-o">
+              </div>
+            </div>
+            <button onclick="runEvidenceSearch()" class="mt-3 text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#E95722">Run Evidence Search</button>
+          </div>
+
+          <!-- Evidence Results -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 flex-1">
+            <div class="font-semibold text-slate-800 text-sm mb-3">Evidence Extraction Table</div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs">
+                <thead><tr class="bg-slate-50">
+                  <th class="text-left p-2 text-slate-600 font-semibold">Study</th>
+                  <th class="text-left p-2 text-slate-600 font-semibold">Design</th>
+                  <th class="text-left p-2 text-slate-600 font-semibold">N</th>
+                  <th class="text-left p-2 text-slate-600 font-semibold">Key Finding</th>
+                  <th class="text-left p-2 text-slate-600 font-semibold">Grade</th>
+                </tr></thead>
+                <tbody class="divide-y divide-slate-100" id="evidence-table">
+                  <tr><td class="p-2 text-slate-700 font-medium">LIBERTY ASTHMA QUEST</td><td class="p-2 text-slate-500">Phase III RCT</td><td class="p-2 text-slate-500">1,902</td><td class="p-2 text-slate-600">47.7% reduction in severe exacerbation rate (p&lt;0.001)</td><td class="p-2"><span class="badge badge-approved">1A</span></td></tr>
+                  <tr><td class="p-2 text-slate-700 font-medium">TRAVERSE OLE</td><td class="p-2 text-slate-500">Open-label ext.</td><td class="p-2 text-slate-500">2,282</td><td class="p-2 text-slate-600">Sustained efficacy over 96 weeks; consistent safety profile</td><td class="p-2"><span class="badge badge-review">1B</span></td></tr>
+                  <tr><td class="p-2 text-slate-700 font-medium">KRONOS</td><td class="p-2 text-slate-500">Phase III RCT</td><td class="p-2 text-slate-500">1,706</td><td class="p-2 text-slate-600">Significant improvement in FEV₁ at 12 weeks (p&lt;0.01)</td><td class="p-2"><span class="badge badge-approved">1A</span></td></tr>
+                  <tr><td class="p-2 text-slate-700 font-medium">RWE Registry 2025</td><td class="p-2 text-slate-500">Retrospective</td><td class="p-2 text-slate-500">8,412</td><td class="p-2 text-slate-600">32% reduction in OCS use vs matched controls</td><td class="p-2"><span class="badge badge-draft">2B</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-2 flex flex-col gap-3">
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-emerald-700" style="background:#FFF0E8">EV</div>
+              <div>
+                <div class="font-bold text-slate-800 text-sm">Medical Writer / Researcher</div>
+                <div class="text-xs text-slate-500">Evidence Synthesis · Systematic Review</div>
+              </div>
+            </div>
+            <div class="mt-3 text-xs text-slate-600 leading-relaxed">Conducts AI-assisted systematic literature reviews for IMCP and SCP support. Uses human-in-the-loop methodology to screen abstracts, extract data, and identify evidence gaps — saving up to 85% of review time.</div>
+            <div class="mt-3 bg-green-50 rounded-lg p-2 text-xs text-green-700 font-medium">AI can reduce abstract screening time by up to 85%</div>
+          </div>
+          <div class="chat-panel flex-1">
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFF0E8">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#E95722">EV</div>
+              <div><div class="font-semibold text-sm text-slate-800">Evidence Synthesis AI</div><div class="text-xs text-slate-400">PICO · Systematic review · Gap analysis</div></div>
+            </div>
+            <div class="chat-messages flex-1" id="chat-evidence">
+              <div class="chat-msg assistant">I'm your Evidence Synthesis AI. I guide structured literature reviews using the PICO framework, help screen abstracts, extract clinical data, and identify knowledge gaps in the evidence base.<br><br>Human oversight is maintained throughout. What are you reviewing?</div>
+            </div>
+            <div class="px-3 py-2 flex flex-wrap gap-1.5">
+              <button class="quick-prompt" onclick="fillPrompt('evidence', this)">Create a PICO framework for a severe asthma evidence review, including population, intervention, comparator, outcomes, search terms, and screening criteria.</button>
+              <button class="quick-prompt" onclick="fillPrompt('evidence', this)">Define inclusion and exclusion criteria for an RWE review on treatment persistence in oncology, including data sources, endpoints, bias checks, and extraction fields.</button>
+              <button class="quick-prompt" onclick="fillPrompt('evidence', this)">Explain how to grade evidence for a meta-analysis submission and provide a table template for study quality, endpoint relevance, limitations, and confidence level.</button>
+            </div>
+            <div class="chat-input-row">
+              <textarea class="chat-input" id="input-evidence" rows="1" placeholder="Ask Evidence Synthesis AI…" onkeydown="handleKey(event,'evidence')"></textarea>
+              <button class="send-btn" id="send-evidence" onclick="sendMessage('evidence')">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ EMAIL QA ══════════ -->
+    <div id="view-email-qa" class="view">
+      <div class="grid grid-cols-5 gap-4" style="min-height:calc(100vh - 140px)">
+        <div class="col-span-3 flex flex-col gap-4">
+          <!-- Email Input -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="font-semibold text-slate-800 text-sm mb-3">Email Asset Review</div>
+            <div class="grid grid-cols-2 gap-3 mb-3">
+              <div>
+                <div class="field-label">Subject Line</div>
+                <input type="text" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" id="email-subject" placeholder="Enter subject line…">
+              </div>
+              <div>
+                <div class="field-label">Preview Text</div>
+                <input type="text" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" id="email-preview" placeholder="Preview text / pre-header…">
+              </div>
+            </div>
+            <div class="field-label">Email Body / HTML</div>
+            <textarea class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm resize-none mb-3" rows="5" id="email-body" placeholder="Paste email HTML or body copy here for QA review…"></textarea>
+            <button onclick="runEmailQA()" class="text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#E95722">Run QA Check</button>
+          </div>
+
+          <!-- QA Results -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 flex-1">
+            <div class="flex items-center justify-between mb-3">
+              <div class="font-semibold text-slate-800 text-sm">QA Checklist</div>
+              <div class="flex items-center gap-2">
+                <div class="text-xs font-medium px-2 py-1 rounded-full bg-green-100 text-green-700" id="spam-score">Spam: Low Risk</div>
+                <div class="text-xs font-medium px-2 py-1 rounded-full bg-orange-100 text-orange-700" id="render-score">Render: 98/100</div>
+              </div>
+            </div>
+            <div class="space-y-2" id="qa-checklist">
+              <div class="compliance-item risk-low"><div class="w-5 h-4 rounded bg-green-100 flex items-center justify-center text-[9px] font-bold text-green-700 flex-shrink-0 mt-0.5">OK</div><div><div class="text-xs font-semibold text-slate-700">Unsubscribe link present</div><div class="text-xs text-slate-400 mt-0.5">CAN-SPAM / GDPR compliant opt-out detected</div></div></div>
+              <div class="compliance-item risk-low"><div class="w-5 h-4 rounded bg-green-100 flex items-center justify-center text-[9px] font-bold text-green-700 flex-shrink-0 mt-0.5">OK</div><div><div class="text-xs font-semibold text-slate-700">Legal footer included</div><div class="text-xs text-slate-400 mt-0.5">company registered address and regulatory statement present</div></div></div>
+              <div class="compliance-item risk-medium"><div class="w-4 h-4 rounded-full bg-yellow-100 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">!</div><div><div class="text-xs font-semibold text-slate-700">Mobile rendering — check required</div><div class="text-xs text-slate-400 mt-0.5">Fixed-width table detected; may break on screens &lt;375px</div></div></div>
+              <div class="compliance-item risk-high"><div class="w-4 h-4 rounded-full bg-orange-100 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">!</div><div><div class="text-xs font-semibold text-slate-700">Subject line length — 68 chars</div><div class="text-xs text-slate-400 mt-0.5">Recommended max 50 chars; truncation likely on mobile clients</div></div></div>
+              <div class="compliance-item risk-low"><div class="w-5 h-4 rounded bg-green-100 flex items-center justify-center text-[9px] font-bold text-green-700 flex-shrink-0 mt-0.5">OK</div><div><div class="text-xs font-semibold text-slate-700">Alt text on all images</div><div class="text-xs text-slate-400 mt-0.5">All img tags include descriptive alt attributes — WCAG 2.2 pass</div></div></div>
+              <div class="compliance-item risk-low"><div class="w-5 h-4 rounded bg-green-100 flex items-center justify-center text-[9px] font-bold text-green-700 flex-shrink-0 mt-0.5">OK</div><div><div class="text-xs font-semibold text-slate-700">All links valid</div><div class="text-xs text-slate-400 mt-0.5">4 of 4 links resolve correctly with no redirect loops</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-2 flex flex-col gap-3">
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-amber-700" style="background:#FFF0E8">EQ</div>
+              <div>
+                <div class="font-bold text-slate-800 text-sm">Digital Marketing Manager</div>
+                <div class="text-xs text-slate-500">Omnichannel Email · HCP Engagement</div>
+              </div>
+            </div>
+            <div class="mt-3 text-xs text-slate-600 leading-relaxed">Manages omnichannel email deployment for HCP segments. Responsible for rendering quality, ABPI compliance, and engagement metrics. Targets 35% open rate and 10% CTR across therapeutic areas.</div>
+            <div class="mt-3 grid grid-cols-3 gap-2 text-center">
+              <div class="bg-orange-50 rounded-lg p-2"><div class="font-bold text-orange-700 text-sm">34.2%</div><div class="text-xs text-slate-400">Open Rate</div></div>
+              <div class="bg-green-50 rounded-lg p-2"><div class="font-bold text-green-700 text-sm">8.7%</div><div class="text-xs text-slate-400">CTR</div></div>
+              <div class="bg-orange-50 rounded-lg p-2"><div class="font-bold text-orange-700 text-sm">34</div><div class="text-xs text-slate-400">Tests Today</div></div>
+            </div>
+          </div>
+          <div class="chat-panel flex-1">
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFFFFF">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#E95722">EQ</div>
+              <div><div class="font-semibold text-sm text-slate-800">Email QA AI</div><div class="text-xs text-slate-400">Rendering · Spam · Compliance · A/B</div></div>
+            </div>
+            <div class="chat-messages flex-1" id="chat-email-qa">
+              <div class="chat-msg assistant">I'm your Email QA specialist. I check rendering across 100+ clients, spam filter risk, ABPI compliance, and help you optimise for HCP engagement.<br><br>Paste your email content above or ask me a question to get started.</div>
+            </div>
+            <div class="px-3 py-2 flex flex-wrap gap-1.5">
+              <button class="quick-prompt" onclick="fillPrompt('email-qa', this)">QA this HCP email concept: subject line, preview text, hero, CTA, claims, safety balance, references, spam risk, mobile rendering, and accessibility.</button>
+              <button class="quick-prompt" onclick="fillPrompt('email-qa', this)">Suggest 5 compliant A/B subject line variants for a respiratory HCP campaign, with rationale, risk notes, and expected engagement signal.</button>
+              <button class="quick-prompt" onclick="fillPrompt('email-qa', this)">Create a deliverability checklist for oncologist email campaigns covering sender reputation, segmentation, consent, HTML weight, CTA clarity, and compliance review.</button>
+            </div>
+            <div class="chat-input-row">
+              <textarea class="chat-input" id="input-email-qa" rows="1" placeholder="Ask Email QA AI…" onkeydown="handleKey(event,'email-qa')"></textarea>
+              <button class="send-btn" id="send-email-qa" onclick="sendMessage('email-qa')">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ COMPLIANCE ══════════ -->
+    <div id="view-compliance" class="view">
+      <div class="grid grid-cols-5 gap-4" style="min-height:calc(100vh - 140px)">
+        <div class="col-span-3 flex flex-col gap-4">
+          <!-- Content Input -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="font-semibold text-slate-800 text-sm mb-1">Content Pre-Screening</div>
+            <div class="text-xs text-slate-500 mb-3">Submit content for AI compliance review before formal MLR submission</div>
+            <div class="grid grid-cols-3 gap-3 mb-3">
+              <div>
+                <div class="field-label">Content Type</div>
+                <select class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" id="comp-type">
+                  <option>eDetail Aid</option><option>Email</option><option>Social Media</option><option>Print Ad</option><option>Congress Slides</option><option>Patient Material</option>
+                </select>
+              </div>
+              <div>
+                <div class="field-label">Market</div>
+                <select class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" id="comp-market">
+                  <option>UK (ABPI)</option><option>US (FDA)</option><option>Saudi Arabia (SFDA)</option><option>India (CDSCO)</option><option>Global</option>
+                </select>
+              </div>
+              <div>
+                <div class="field-label">Therapeutic Area</div>
+                <select class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" id="comp-ta">
+                  <option>Respiratory</option><option>Vaccines</option><option>Oncology</option><option>Immunology</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-label">Content to Review</div>
+            <textarea class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm resize-none mb-3" rows="5" id="comp-content" placeholder="Paste the promotional content or claims you want pre-screened against ABPI/FDA guidelines…"></textarea>
+            <button onclick="runCompliance()" class="text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#E95722">Run Compliance Check</button>
+          </div>
+
+          <!-- Results -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 flex-1">
+            <div class="flex items-center justify-between mb-3">
+              <div class="font-semibold text-slate-800 text-sm">Review Results</div>
+              <div class="flex items-center gap-2">
+                <div class="text-xs font-medium px-2 py-1 rounded-full bg-green-100 text-green-700">Overall: Low Risk</div>
+                <div class="text-xs text-slate-400">3 items · 0 Critical · 1 High · 2 Medium</div>
+              </div>
+            </div>
+            <div class="space-y-2" id="compliance-results">
+              <div class="compliance-item risk-high">
+                <div class="px-2 py-0.5 rounded text-xs font-bold bg-orange-100 text-orange-700 flex-shrink-0">HIGH</div>
+                <div>
+                  <div class="text-xs font-semibold text-slate-700">Fair balance — abbreviated ISI required</div>
+                  <div class="text-xs text-slate-500 mt-0.5">ABPI Code Clause 12.1: benefit claims must be accompanied by safety information of similar prominence. Add abbreviated ISI block.</div>
+                </div>
+              </div>
+              <div class="compliance-item risk-medium">
+                <div class="px-2 py-0.5 rounded text-xs font-bold bg-yellow-100 text-yellow-700 flex-shrink-0">MED</div>
+                <div>
+                  <div class="text-xs font-semibold text-slate-700">Superlative claim — "best in class" needs substantiation</div>
+                  <div class="text-xs text-slate-500 mt-0.5">ABPI Code Clause 7.2: comparative claims must be based on up-to-date, relevant evidence. Link to approved SCP reference or remove.</div>
+                </div>
+              </div>
+              <div class="compliance-item risk-medium">
+                <div class="px-2 py-0.5 rounded text-xs font-bold bg-yellow-100 text-yellow-700 flex-shrink-0">MED</div>
+                <div>
+                  <div class="text-xs font-semibold text-slate-700">Reference formatting inconsistency</div>
+                  <div class="text-xs text-slate-500 mt-0.5">Reference [3] appears in body copy but is missing from the reference list footer. Add full citation or remove in-text superscript.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-2 flex flex-col gap-3">
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-red-700" style="background:#FFF0E8">ML</div>
+              <div>
+                <div class="font-bold text-slate-800 text-sm">Regulatory Affairs Specialist</div>
+                <div class="text-xs text-slate-500">MLR Pre-Screening · ABPI / FDA / SFDA / CDSCO</div>
+              </div>
+            </div>
+            <div class="mt-3 text-xs text-slate-600 leading-relaxed">Pre-screens promotional content against international pharma marketing regulations before formal MLR submission. Targets 95%+ first-pass compliance rate to maintain the 7-8 day approval cycle.</div>
+            <div class="mt-3 grid grid-cols-2 gap-2">
+              <div class="bg-green-50 rounded-lg p-2 text-center"><div class="font-bold text-green-700 text-sm">94.1%</div><div class="text-xs text-slate-400">1st-pass pass rate</div></div>
+              <div class="bg-orange-50 rounded-lg p-2 text-center"><div class="font-bold text-orange-700 text-sm">17</div><div class="text-xs text-slate-400">Pending MLR items</div></div>
+            </div>
+          </div>
+          <div class="chat-panel flex-1">
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFF0E8">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#E95722">ML</div>
+              <div><div class="font-semibold text-sm text-slate-800">Compliance AI</div><div class="text-xs text-slate-400">ABPI · FDA · SFDA · CDSCO pre-screening</div></div>
+            </div>
+            <div class="chat-messages flex-1" id="chat-compliance">
+              <div class="chat-msg assistant">I'm your Regulatory Affairs AI. I pre-screen content against ABPI, FDA, SFDA, and CDSCO pharmaceutical marketing regulations and help prepare compliant copy before formal MLR submission.<br><br>What content would you like me to review?</div>
+            </div>
+            <div class="px-3 py-2 flex flex-wrap gap-1.5">
+              <button class="quick-prompt" onclick="fillPrompt('compliance', this)">Pre-screen a promotional HCP email for fair balance, claim substantiation, reference placement, superlatives, off-label risk, and required safety information.</button>
+              <button class="quick-prompt" onclick="fillPrompt('compliance', this)">Rewrite this claim to be more compliant: 'Patients achieve superior control quickly.' Provide safer alternatives and explain what evidence would be required.</button>
+              <button class="quick-prompt" onclick="fillPrompt('compliance', this)">Compare ABPI, FDA, SFDA, and CDSCO watchouts for digital HCP content and create a practical MLR pre-submission checklist.</button>
+            </div>
+            <div class="chat-input-row">
+              <textarea class="chat-input" id="input-compliance" rows="1" placeholder="Ask Compliance AI…" onkeydown="handleKey(event,'compliance')"></textarea>
+              <button class="send-btn" id="send-compliance" onclick="sendMessage('compliance')">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ LOCALIZATION ══════════ -->
+    <div id="view-localization" class="view">
+      <div class="grid grid-cols-5 gap-4" style="min-height:calc(100vh - 140px)">
+        <div class="col-span-3 flex flex-col gap-4">
+          <!-- Source + Region -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="font-semibold text-slate-800 text-sm mb-3">Localisation Workspace</div>
+            <div class="field-label mb-1">Target Market</div>
+            <div class="flex gap-2 mb-3" id="region-tabs">
+              <button class="tab-btn active" onclick="selectRegion('India', this)">🇮🇳 India</button>
+              <button class="tab-btn" onclick="selectRegion('Saudi Arabia', this)">🇸🇦 Saudi Arabia</button>
+              <button class="tab-btn" onclick="selectRegion('UK', this)">🇬🇧 UK</button>
+              <button class="tab-btn" onclick="selectRegion('US', this)">🇺🇸 US</button>
+            </div>
+            <div class="grid grid-cols-2 gap-3 mb-3">
+              <div>
+                <div class="field-label">Therapeutic Area</div>
+                <select class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" id="loc-ta">
+                  <option>Respiratory</option><option>Vaccines</option><option>Oncology</option><option>Immunology</option>
+                </select>
+              </div>
+              <div>
+                <div class="field-label">Content Type</div>
+                <select class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" id="loc-type">
+                  <option>Email</option><option>eDetail Aid</option><option>Social Media</option><option>Congress</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-label">Global Master Content</div>
+            <textarea class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm resize-none mb-3" rows="4" id="loc-source" placeholder="Paste the global master content to be localised for the selected market…"></textarea>
+            <button onclick="runLocalisation()" class="text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#E95722">Localise Content</button>
+          </div>
+
+          <!-- Output -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4 flex-1">
+            <div class="flex items-center justify-between mb-2">
+              <div class="font-semibold text-slate-800 text-sm">Localised Output</div>
+              <span class="badge badge-draft" id="loc-market-badge">India</span>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-3 min-h-24 text-sm text-slate-600 leading-relaxed" id="loc-output">Localised content will appear here after running the AI localisation.</div>
+            <div class="mt-3 bg-indigo-50 border border-indigo-100 rounded-lg p-3">
+              <div class="text-xs font-semibold text-indigo-700 mb-1">Regional Considerations</div>
+              <div class="text-xs text-indigo-600 leading-relaxed" id="loc-notes">Select a market and run localisation to see region-specific cultural and regulatory notes.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-2 flex flex-col gap-3">
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-indigo-700" style="background:#FFF0E8">LO</div>
+              <div>
+                <div class="font-bold text-slate-800 text-sm">Regional Content Manager</div>
+                <div class="text-xs text-slate-500">Localisation · India · Saudi Arabia · UK · US</div>
+              </div>
+            </div>
+            <div class="mt-3 text-xs text-slate-600 leading-relaxed">Adapts global master content for local HCP preferences, cultural nuances, and regional regulatory requirements. Acts as central SPOC across Marketing, Medical, and Sales for local market go-live.</div>
+            <div class="mt-3 flex gap-2 flex-wrap">
+              <span class="badge badge-review">9 In Progress</span>
+              <span class="badge badge-approved">India · SA · UK · US</span>
+            </div>
+          </div>
+          <div class="chat-panel flex-1">
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFF0E8">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#E95722">LO</div>
+              <div><div class="font-semibold text-sm text-slate-800">Localisation AI</div><div class="text-xs text-slate-400">Regional adaptation · Cultural & regulatory</div></div>
+            </div>
+            <div class="chat-messages flex-1" id="chat-localization">
+              <div class="chat-msg assistant">I'm your Localisation AI. I adapt global content for India, Saudi Arabia, UK, and US markets — ensuring cultural relevance, local regulatory compliance, and HCP communication preferences are respected.<br><br>Which market are you localising for?</div>
+            </div>
+            <div class="px-3 py-2 flex flex-wrap gap-1.5">
+              <button class="quick-prompt" onclick="fillPrompt('localization', this)">Adapt a global COPD HCP email for Indian pulmonologists: tone, terminology, regulatory watchouts, local clinical practice context, and CTA changes.</button>
+              <button class="quick-prompt" onclick="fillPrompt('localization', this)">List cultural and regulatory considerations for localising oncology HCP content for Saudi Arabia, including imagery, language, claims, and approval workflow.</button>
+              <button class="quick-prompt" onclick="fillPrompt('localization', this)">Create a market adaptation checklist for UK, US, India, and Saudi Arabia covering references, prescribing information, safety copy, channel norms, and review owners.</button>
+            </div>
+            <div class="chat-input-row">
+              <textarea class="chat-input" id="input-localization" rows="1" placeholder="Ask Localisation AI…" onkeydown="handleKey(event,'localization')"></textarea>
+              <button class="send-btn" id="send-localization" onclick="sendMessage('localization')">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ VISUAL CONCEPT STUDIO ══════════ -->
+    <div id="view-media" class="view">
+      <div class="grid grid-cols-5 gap-4" style="min-height:calc(100vh - 140px)">
+        <div class="col-span-3 flex flex-col gap-4">
+          <div class="glass-card p-5">
+            <div class="flex items-start justify-between mb-4">
+              <div>
+                <div class="font-semibold text-slate-800 text-sm">Visual Concept Generation</div>
+                <div class="text-xs text-slate-500 mt-1">Explore HCP-safe visual routes, storyboard frames, and infographic concepts before Content Lab assembly.</div>
+              </div>
+              <span class="soft-chip">Concept generation</span>
+            </div>
+            <div class="grid grid-cols-3 gap-3 mb-3">
+              <div>
+                <div class="field-label">Output Type</div>
+                <select id="media-format" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm">
+                  <option>Campaign visual</option>
+                  <option>HCP email hero</option>
+                  <option>Social post image</option>
+                  <option>Storyboard frame</option>
+                  <option>Infographic concept</option>
+                </select>
+              </div>
+              <div>
+                <div class="field-label">Aspect Ratio</div>
+                <select id="media-ratio" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm">
+                  <option>16:9</option>
+                  <option>1:1</option>
+                  <option>4:3</option>
+                  <option>3:4</option>
+                  <option>9:16</option>
+                </select>
+              </div>
+              <div>
+                <div class="field-label">Model</div>
+                <select id="media-model" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm">
+                  <option value="gemini-2.5-flash-image">Gemini 2.5 Flash Image</option>
+                  <option value="gemini-3-pro-preview">Gemini 3 Pro Preview Image</option>
+                </select>
+              </div>
+            </div>
+            <div class="field-label">Prompt</div>
+            <textarea id="media-prompt" rows="5" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm resize-none" placeholder="Describe the visual. Example: a clean scientific campaign hero showing modular content flowing through review, evidence, and localization stages."></textarea>
+            <div class="grid grid-cols-2 gap-3 mt-3">
+              <div>
+                <div class="field-label">Review Handoff</div>
+                <div class="handoff-grid">
+                  <input id="media-owner" class="border border-slate-200 rounded-lg px-3 py-2 text-xs" value="Content Lab">
+                  <input id="media-market" class="border border-slate-200 rounded-lg px-3 py-2 text-xs" value="India">
+                </div>
+              </div>
+              <div>
+                <div class="field-label">Concept Brief</div>
+                <select id="media-brief" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-xs" onchange="applyConceptBrief(this.value)">
+                  <option value="asterresp">AsterResp COPD HCP Hero</option>
+                  <option value="oncopath">OncoPath Biomarker Infographic</option>
+                  <option value="novavax">NovaVax Storyboard Frame</option>
+                  <option value="workflow">Platform Workflow Visual</option>
+                </select>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="buildConceptPrompt()" class="quick-prompt">Build prompt from brief + guardrails</button>
+              <button onclick="copyConceptHandoff()" class="quick-prompt">Prepare handoff notes</button>
+            </div>
+            <div class="flex items-center gap-2 mt-3">
+              <button onclick="generateMedia()" class="send-btn">Generate Concept</button>
+              <span id="media-status" class="text-xs text-slate-500"></span>
+            </div>
+          </div>
+          <div class="glass-card p-5 flex-1">
+            <div class="font-semibold text-slate-800 text-sm mb-3">Generated Concept</div>
+            <div id="media-preview" class="media-preview">
+              <div class="text-center max-w-sm px-6">
+                <div class="mx-auto mb-3 w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 icon-tile"><i data-lucide="image"></i></div>
+                <div class="text-sm font-semibold text-slate-700">No concept generated yet</div>
+                <div class="text-xs text-slate-500 mt-1">Concept images appear here for review, refinement, and Content Lab handoff.</div>
+              </div>
+            </div>
+            <div id="media-notes" class="text-xs text-slate-500 mt-3"></div>
+          </div>
+        </div>
+        <div class="col-span-2 flex flex-col gap-3">
+          <div class="glass-card p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-slate-700 icon-tile" style="background:#FFF0E8"><i data-lucide="sparkles"></i></div>
+              <div>
+                <div class="font-bold text-slate-800 text-sm">Visual Concept Studio</div>
+                <div class="text-xs text-slate-500">Visual routes · prompt design · review handoff</div>
+              </div>
+            </div>
+            <div class="mt-3 text-xs text-slate-600 leading-relaxed">Create brand-neutral concepts for HCP education, evidence infographics, modular content systems, and campaign mockups. Final medical, legal, and brand review remains required.</div>
+          </div>
+          <div class="glass-card p-4">
+            <div class="font-semibold text-slate-800 text-sm mb-3">Active Concept Briefs</div>
+            <div class="space-y-2 text-xs">
+              <div class="flex items-start justify-between gap-3 border border-slate-100 rounded-lg p-2">
+                <div><div class="font-semibold text-slate-700">AsterResp COPD HCP Hero</div><div class="text-slate-500 mt-0.5">16:9 email · India · due 02 May</div></div>
+                <span class="soft-chip">Ready</span>
+              </div>
+              <div class="flex items-start justify-between gap-3 border border-slate-100 rounded-lg p-2">
+                <div><div class="font-semibold text-slate-700">OncoPath Biomarker Infographic</div><div class="text-slate-500 mt-0.5">1:1 social · US · risk review</div></div>
+                <span class="soft-chip">MLR notes</span>
+              </div>
+              <div class="flex items-start justify-between gap-3 border border-slate-100 rounded-lg p-2">
+                <div><div class="font-semibold text-slate-700">NovaVax Storyboard Frame</div><div class="text-slate-500 mt-0.5">4:3 presentation · UK · concepting</div></div>
+                <span class="soft-chip">Draft</span>
+              </div>
+            </div>
+          </div>
+          <div class="glass-card p-4">
+            <div class="font-semibold text-slate-800 text-sm mb-3">Concept Guardrails</div>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="guardrail-item"><input type="checkbox" class="concept-guardrail" value="No identifiable patients or patient-specific clinical situations" checked><span class="guardrail-copy"><span class="guardrail-title">Patient-safe</span><span class="guardrail-sub">No identifiable people</span></span></label>
+              <label class="guardrail-item"><input type="checkbox" class="concept-guardrail" value="No company logos, brand marks, product packs, or trademarked visual elements" checked><span class="guardrail-copy"><span class="guardrail-title">Brand-neutral</span><span class="guardrail-sub">No logos or packs</span></span></label>
+              <label class="guardrail-item"><input type="checkbox" class="concept-guardrail" value="No embedded efficacy claims, superiority language, or treatment outcome promises inside the image" checked><span class="guardrail-copy"><span class="guardrail-title">Claim-safe</span><span class="guardrail-sub">No claim text in image</span></span></label>
+              <label class="guardrail-item"><input type="checkbox" class="concept-guardrail" value="Include an alt-text starter and visual accessibility notes for review" checked><span class="guardrail-copy"><span class="guardrail-title">Accessible</span><span class="guardrail-sub">Alt-text starter</span></span></label>
+              <label class="guardrail-item"><input type="checkbox" class="concept-guardrail" value="Use clean clinical metaphors instead of literal disease severity imagery"><span class="guardrail-copy"><span class="guardrail-title">Clinical metaphor</span><span class="guardrail-sub">Avoid distressing visuals</span></span></label>
+              <label class="guardrail-item"><input type="checkbox" class="concept-guardrail" value="Leave safe whitespace for headline, CTA, ISI, and reference footer placement"><span class="guardrail-copy"><span class="guardrail-title">Layout-safe</span><span class="guardrail-sub">Room for copy</span></span></label>
+            </div>
+          </div>
+          <div class="glass-card p-4">
+            <div class="flex items-center justify-between mb-3">
+              <div class="font-semibold text-slate-800 text-sm">Prompt Library</div>
+              <span class="soft-chip">Click to load</span>
+            </div>
+            <div class="prompt-library">
+              <button class="prompt-card" onclick="useMediaPreset('hcp-hero')"><div class="prompt-card-title">HCP Email Hero</div><div class="prompt-card-sub">Respiratory education visual with whitespace for approved copy.</div></button>
+              <button class="prompt-card" onclick="useMediaPreset('workflow')"><div class="prompt-card-title">Workflow Dashboard</div><div class="prompt-card-sub">Concept-to-MLR content pipeline visual for presentations.</div></button>
+              <button class="prompt-card" onclick="useMediaPreset('infographic')"><div class="prompt-card-title">Evidence Infographic</div><div class="prompt-card-sub">PICO, evidence hierarchy, and reference-linking concept.</div></button>
+              <button class="prompt-card" onclick="useMediaPreset('storyboard')"><div class="prompt-card-title">Storyboard Frame</div><div class="prompt-card-sub">Adult immunisation education scene for review.</div></button>
+              <button class="prompt-card" onclick="useMediaPreset('social')"><div class="prompt-card-title">Social Concept</div><div class="prompt-card-sub">Square HCP-safe scientific metaphor for campaign planning.</div></button>
+              <button class="prompt-card" onclick="useMediaPreset('booth')"><div class="prompt-card-title">Congress Booth Loop</div><div class="prompt-card-sub">Ambient modular content animation frame without claims.</div></button>
+            </div>
+          </div>
+          <div class="chat-panel flex-1">
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFF0E8">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold icon-tile" style="background:#E95722"><i data-lucide="image-plus"></i></div>
+              <div><div class="font-semibold text-sm text-slate-800">Visual Concept AI</div><div class="text-xs text-slate-400">Prompt refinement · risk notes · handoff guidance</div></div>
+            </div>
+            <div class="chat-messages flex-1" id="chat-media">
+              <div class="chat-msg assistant">I can help create HCP-safe visual routes, refine generation prompts, flag visual compliance risks, and prepare handoff notes for Content Lab and MLR.</div>
+            </div>
+            <div class="px-3 py-2 flex flex-wrap gap-1.5">
+              <button class="quick-prompt" onclick="fillPrompt('media', this)">Write an image generation prompt for a clean HCP email hero about respiratory education. Keep it brand-neutral, medically appropriate, light-mode, and free of patient-identifiable imagery.</button>
+              <button class="quick-prompt" onclick="fillPrompt('media', this)">Create 5 visual concept directions for an AI content creation platform dashboard showing concept generation, modular assembly, MLR review, localisation, and analytics.</button>
+              <button class="quick-prompt" onclick="fillPrompt('media', this)">Review this media idea for pharma risks: a patient smiling while using an inhaler next to efficacy copy. Flag visual, regulatory, and claim-substantiation concerns.</button>
+            </div>
+            <div class="chat-input-row">
+              <textarea class="chat-input" id="input-media" rows="1" placeholder="Ask Visual Concept AI..." onkeydown="handleKey(event,'media')"></textarea>
+              <button class="send-btn" id="send-media" onclick="sendMessage('media')">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ ANALYTICS ══════════ -->
+    <div id="view-analytics" class="view">
+      <div class="grid grid-cols-5 gap-4" style="min-height:calc(100vh - 140px)">
+        <div class="col-span-3 flex flex-col gap-4">
+          <!-- KPI Grid -->
+          <div class="grid grid-cols-2 gap-3" id="kpi-grid"></div>
+          <!-- Channel performance table -->
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="font-semibold text-slate-800 text-sm mb-3">Content Performance by Therapeutic Area</div>
+            <table class="w-full text-xs">
+              <thead><tr class="bg-slate-50">
+                <th class="text-left p-2 text-slate-600 font-semibold">Therapeutic Area</th>
+                <th class="text-left p-2 text-slate-600 font-semibold">Assets Live</th>
+                <th class="text-left p-2 text-slate-600 font-semibold">Open Rate</th>
+                <th class="text-left p-2 text-slate-600 font-semibold">CTR</th>
+                <th class="text-left p-2 text-slate-600 font-semibold">Reuse %</th>
+                <th class="text-left p-2 text-slate-600 font-semibold">Trend</th>
+              </tr></thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr><td class="p-2 font-medium text-slate-700">Respiratory</td><td class="p-2 text-slate-500">48</td><td class="p-2 text-slate-500">36.1%</td><td class="p-2 text-slate-500">9.4%</td><td class="p-2 text-slate-500">71%</td><td class="p-2 text-green-600 font-semibold">↑ +3%</td></tr>
+                <tr><td class="p-2 font-medium text-slate-700">Vaccines</td><td class="p-2 text-slate-500">34</td><td class="p-2 text-slate-500">38.7%</td><td class="p-2 text-slate-500">11.2%</td><td class="p-2 text-slate-500">78%</td><td class="p-2 text-green-600 font-semibold">↑ +8%</td></tr>
+                <tr><td class="p-2 font-medium text-slate-700">Oncology</td><td class="p-2 text-slate-500">29</td><td class="p-2 text-slate-500">31.4%</td><td class="p-2 text-slate-500">7.1%</td><td class="p-2 text-slate-500">58%</td><td class="p-2 text-red-500 font-semibold">↓ −2%</td></tr>
+                <tr><td class="p-2 font-medium text-slate-700">Immunology</td><td class="p-2 text-slate-500">22</td><td class="p-2 text-slate-500">33.8%</td><td class="p-2 text-slate-500">8.3%</td><td class="p-2 text-slate-500">63%</td><td class="p-2 text-green-600 font-semibold">↑ +1%</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="col-span-2 flex flex-col gap-3">
+          <div class="bg-white rounded-xl border border-slate-200 p-4">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-slate-700" style="background:#F8FAFC">AN</div>
+              <div>
+                <div class="font-bold text-slate-800 text-sm">Content Operations Director</div>
+                <div class="text-xs text-slate-500">KPI Reporting · ROI · Content Operations 2031</div>
+              </div>
+            </div>
+            <div class="mt-3 text-xs text-slate-600 leading-relaxed">Monitors end-to-end content performance and demonstrates ROI of the Content Lab / modular strategy. Reports on operational efficiency, HCP engagement, and strategic alignment with content operations targets.</div>
+          </div>
+          <div class="chat-panel flex-1">
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#F8FAFC">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#5F6368">AN</div>
+              <div><div class="font-semibold text-sm text-slate-800">Analytics AI</div><div class="text-xs text-slate-400">KPIs · ROI · Performance insights</div></div>
+            </div>
+            <div class="chat-messages flex-1" id="chat-analytics">
+              <div class="chat-msg assistant">I'm your Analytics AI. I interpret content KPIs, surface performance trends, and help you build the business case for Content Lab investment — all tied to content operations objectives.<br><br>What would you like to analyse?</div>
+            </div>
+            <div class="px-3 py-2 flex flex-wrap gap-1.5">
+              <button class="quick-prompt" onclick="fillPrompt('analytics', this)">Diagnose why MLR cycle time is above the 7-day target using pipeline, reuse, claim complexity, reviewer load, and market adaptation data.</button>
+              <button class="quick-prompt" onclick="fillPrompt('analytics', this)">Build an ROI model for modular content reuse: assumptions, formulas, KPIs, data needed, and an executive summary for content operations leaders.</button>
+              <button class="quick-prompt" onclick="fillPrompt('analytics', this)">Identify which content formats should be prioritised for HCP engagement using open rate, CTR, time-on-asset, reuse rate, compliance pass rate, and cost-to-produce.</button>
+            </div>
+            <div class="chat-input-row">
+              <textarea class="chat-input" id="input-analytics" rows="1" placeholder="Ask Analytics AI…" onkeydown="handleKey(event,'analytics')"></textarea>
+              <button class="send-btn" id="send-analytics" onclick="sendMessage('analytics')">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content area -->
+</div><!-- /main -->
+
+<!-- ═══════════════════ JAVASCRIPT ═══════════════════ -->
+<script>
+const MODULES = ['admin','content-lab','dam','scp','evidence','email-qa','compliance','localization','analytics','media'];
+const TOPBAR = {
+  'admin':       ['Admin Dashboard',      'End-to-end content workflow orchestration'],
+  'content-lab': ['Content Lab',          'Modular content assembly · Content Strategist'],
+  'dam':         ['Digital Asset Management', 'Taxonomy, governance & asset lifecycle · DAM Specialist'],
+  'scp':         ['Sci Comm Platform (SCP)', 'IMCP planning & scientific narratives · Medical Affairs Director'],
+  'evidence':    ['Evidence Synthesis',   'AI-assisted systematic literature review · Medical Writer'],
+  'email-qa':    ['Email QA',             'Rendering, compliance & engagement testing · Digital Marketing Manager'],
+  'compliance':  ['Compliance (MLR)',     'ABPI / FDA / SFDA pre-screening · Regulatory Affairs Specialist'],
+  'localization':['Localisation',         'Regional content adaptation · Regional Content Manager'],
+  'media':       ['Visual Concept Studio', 'Upstream visual concepting · prompt design · MLR-ready handoff'],
+  'analytics':   ['Analytics & KPIs',     'Performance measurement & ROI · Content Operations Director'],
+};
+
+let chatHistories = {};
+let damAssets = [];
+let contentModules = [];
+let assembledModules = [];
+let selectedRegion = 'India';
+let llmModels = [
+  { id: 'gemini-3-pro-preview', label: 'Gemini 3 Pro Preview' },
+  { id: 'gemini-3-flash-preview', label: 'Gemini 3 Flash Preview' },
+  { id: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
+  { id: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
+];
+let selectedModels = {};
+MODULES.forEach(m => chatHistories[m] = []);
+MODULES.forEach(m => selectedModels[m] = 'gemini-3-pro-preview');
+
+// ── Navigation ──────────────────────────────────────────
+function navigate(moduleId) {
+  MODULES.forEach(m => {
+    document.getElementById('view-'+m).classList.remove('active');
+    document.getElementById('nav-'+m).classList.remove('active');
+  });
+  document.getElementById('view-'+moduleId).classList.add('active');
+  document.getElementById('nav-'+moduleId).classList.add('active');
+  const [title, sub] = TOPBAR[moduleId];
+  document.getElementById('topbar-title').textContent = title;
+  document.getElementById('topbar-sub').textContent = sub;
+  if (moduleId === 'admin')    loadAdminData();
+  if (moduleId === 'dam')      loadDAMAssets();
+  if (moduleId === 'analytics') loadKPIs();
+  if (moduleId === 'content-lab') loadContentModules();
+}
+
+// ── AI Chat ─────────────────────────────────────────────
+function handleKey(e, moduleId) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(moduleId); }
+}
+
+function fillPrompt(moduleId, btn) {
+  const input = document.getElementById('input-'+moduleId);
+  input.value = btn.textContent.trim();
+  input.focus();
+}
+
+async function sendMessage(moduleId) {
+  const input = document.getElementById('input-'+moduleId);
+  const message = input.value.trim();
+  if (!message) return;
+
+  const sendBtn = document.getElementById('send-'+moduleId);
+  input.value = '';
+  sendBtn.disabled = true;
+
+  addChatMsg(moduleId, 'user', message);
+
+  // Snapshot history BEFORE adding this turn so the backend appends it once
+  const historySnapshot = chatHistories[moduleId].slice(-10);
+
+  const msgEl = addChatMsg(moduleId, 'assistant', '');
+  msgEl.classList.add('typing');
+  msgEl.textContent = '…';
+
+  try {
+    const res = await fetch('/api/chat/'+moduleId, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message, module: moduleId, model: selectedModels[moduleId], history: historySnapshot })
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      msgEl.classList.remove('typing');
+      msgEl.textContent = `[Server error ${res.status}: ${err}]`;
+      sendBtn.disabled = false;
+      return;
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+    let buffer = '';
+
+    msgEl.classList.remove('typing');
+    msgEl.textContent = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6);
+        if (data === '[DONE]') break;
+        try {
+          const parsed = JSON.parse(data);
+          if (parsed.error) {
+            fullText += `\n\n${parsed.error}`;
+          } else {
+            fullText += parsed.text;
+          }
+          setAssistantMessage(msgEl, fullText);
+          scrollChat(moduleId);
+        } catch {}
+      }
+    }
+    // Only push to history after successful round-trip
+    chatHistories[moduleId].push({ role: 'user', content: message });
+    chatHistories[moduleId].push({ role: 'assistant', content: fullText });
+  } catch (err) {
+    msgEl.classList.remove('typing');
+    setAssistantMessage(msgEl, '[Connection error — is the server running on port 8000?]');
+  }
+  sendBtn.disabled = false;
+  scrollChat(moduleId);
+}
+
+function addChatMsg(moduleId, role, text) {
+  const container = document.getElementById('chat-'+moduleId);
+  const el = document.createElement('div');
+  el.className = 'chat-msg ' + role;
+  if (role === 'assistant') {
+    setAssistantMessage(el, text);
+  } else {
+    el.textContent = text;
+  }
+  container.appendChild(el);
+  scrollChat(moduleId);
+  return el;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function inlineFormat(value) {
+  return escapeHtml(value)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`(.+?)`/g, '<strong>$1</strong>');
+}
+
+function setAssistantMessage(el, text) {
+  const clean = String(text || '').trim();
+  if (!clean) {
+    el.textContent = '';
+    return;
+  }
+
+  const lines = clean.split(/\n+/).map(line => line.trim()).filter(Boolean);
+  let html = '';
+  let inList = false;
+
+  const closeList = () => {
+    if (inList) {
+      html += '</ul>';
+      inList = false;
+    }
+  };
+
+  lines.forEach((line, index) => {
+    const bullet = line.match(/^[-*]\s+(.+)/);
+    const numbered = line.match(/^\d+\.\s+(.+)/);
+    const heading = line.match(/^#{1,3}\s+(.+)/);
+    const labelHeading = line.match(/^([A-Z][A-Za-z /&-]{2,28}):$/);
+    const boldHeading = line.match(/^\*\*([A-Z][A-Za-z /&-]{2,28})\*\*:?$/);
+
+    if (bullet || numbered) {
+      if (!inList) {
+        html += '<ul>';
+        inList = true;
+      }
+      html += `<li>${inlineFormat((bullet || numbered)[1])}</li>`;
+      return;
+    }
+
+    closeList();
+
+    if (heading) {
+      html += `<div class="response-section">${inlineFormat(heading[1])}</div>`;
+    } else if (boldHeading) {
+      html += `<div class="response-section">${inlineFormat(boldHeading[1])}</div>`;
+    } else if (labelHeading) {
+      html += `<div class="response-section">${inlineFormat(labelHeading[1])}</div>`;
+    } else if (index === 0 && lines.length > 1) {
+      html += `<div class="response-title">${inlineFormat(line)}</div>`;
+    } else {
+      html += `<p>${inlineFormat(line)}</p>`;
+    }
+  });
+
+  closeList();
+  el.innerHTML = html;
+}
+
+function scrollChat(moduleId) {
+  const c = document.getElementById('chat-'+moduleId);
+  c.scrollTop = c.scrollHeight;
+}
+
+function workflowIcon(name) {
+  return {
+    admin: 'layout-dashboard',
+    'content-lab': 'blocks',
+    dam: 'folder-kanban',
+    scp: 'microscope',
+    evidence: 'book-open-check',
+    'email-qa': 'mail-check',
+    compliance: 'shield-check',
+    localization: 'languages',
+    media: 'image-plus',
+    analytics: 'chart-no-axes-combined'
+  }[name] || 'circle';
+}
+
+function refreshIcons() {
+  if (window.lucide) lucide.createIcons();
+}
+
+function mountModelSelectors(models = llmModels) {
+  llmModels = models.length ? models : llmModels;
+  MODULES.forEach(moduleId => {
+    const panel = document.getElementById('chat-'+moduleId)?.closest('.chat-panel');
+    const header = panel?.querySelector('.border-b');
+    if (!header) return;
+
+    let select = header.querySelector('.llm-select');
+    if (!select) {
+      select = document.createElement('select');
+      select.className = 'llm-select';
+      select.setAttribute('aria-label', 'LLM model');
+      select.id = 'model-' + moduleId;
+      select.onchange = () => { selectedModels[moduleId] = select.value; };
+      header.appendChild(select);
+    }
+    select.innerHTML = llmModels.map(model =>
+      `<option value="${model.id}" ${model.id === selectedModels[moduleId] ? 'selected' : ''}>${model.label}</option>`
+    ).join('');
+  });
+}
+
+async function loadQuickPrompts() {
+  await Promise.all(MODULES.map(async moduleId => {
+    const promptRow = document.getElementById('chat-'+moduleId)?.nextElementSibling;
+    if (!promptRow) return;
+    try {
+      const res = await fetch('/api/quick-prompts/' + moduleId);
+      const prompts = await res.json();
+      if (!Array.isArray(prompts) || prompts.length === 0) return;
+      promptRow.innerHTML = prompts.map(prompt =>
+        `<button class="quick-prompt" onclick="fillPrompt('${moduleId}', this)">${escapeHtml(prompt)}</button>`
+      ).join('');
+    } catch(e) {}
+  }));
+}
+
+// ── Admin Dashboard ─────────────────────────────────────
+async function loadAdminData() {
+  try {
+    const res = await fetch('/api/workflow/status');
+    const data = await res.json();
+    document.getElementById('health-pct').textContent = data.pipeline_health + '%';
+
+    // Pipeline row
+    const pipelineRow = document.getElementById('pipeline-row');
+    const steps = Object.keys(data.modules);
+    pipelineRow.innerHTML = '';
+    const colors = {
+      'content-lab':'#E95722','dam':'#E95722','scp':'#E95722','evidence':'#E95722',
+      'email-qa':'#E95722','compliance':'#B94115','localization':'#E95722','analytics':'#E95722'
+    };
+    const detailText = {
+      'content-lab': 'Assemble',
+      'dam': 'Govern',
+      'scp': 'Scientific',
+      'evidence': 'Reference',
+      'email-qa': 'QA',
+      'compliance': 'MLR',
+      'localization': 'Adapt',
+      'analytics': 'Measure'
+    };
+    const pipelineLabel = {
+      'scp': 'Sci Comm',
+      'evidence': 'Evidence',
+      'compliance': 'MLR',
+      'localization': 'Localise',
+      'analytics': 'Analytics'
+    };
+    steps.forEach((key, i) => {
+      const mod = data.modules[key];
+      const label = pipelineLabel[key] || mod.label;
+      const isWarning = mod.status === 'warning';
+      const color = colors[key] || '#5F6368';
+      const step = document.createElement('div');
+      step.className = `pipeline-step ${isWarning ? 'warning' : ''}`;
+      step.onclick = () => navigate(key);
+      step.innerHTML = `
+        <div class="pipeline-dot" title="${mod.label}" style="${isWarning ? '' : `background:linear-gradient(135deg,#F48655,${color});`}">
+          <i data-lucide="${workflowIcon(key)}"></i>
+        </div>
+        <div class="pipeline-title">
+          <span class="pipeline-status">${String(i + 1).padStart(2, '0')}</span>
+          <div class="pipeline-label" title="${mod.label}">${label}</div>
+        </div>
+        <div class="pipeline-detail">${detailText[key] || mod.detail}</div>`;
+      pipelineRow.appendChild(step);
+    });
+
+    // Module grid
+    const grid = document.getElementById('admin-module-grid');
+    grid.innerHTML = '';
+    Object.entries(data.modules).forEach(([key, mod]) => {
+      const isWarning = mod.status === 'warning';
+      const color = isWarning ? '#B94115' : (colors[key] || '#5F6368');
+      const card = document.createElement('div');
+      card.className = 'bg-white rounded-xl border border-slate-200 p-4 cursor-pointer hover:shadow-md transition-shadow';
+      card.onclick = () => navigate(key);
+      card.innerHTML = `
+        <div class="flex items-start justify-between mb-2">
+          <span class="nav-icon"><i data-lucide="${workflowIcon(key)}"></i></span>
+          <span class="badge ${isWarning ? 'badge-warning' : 'badge-active'}">${isWarning ? 'Needs Attention' : 'Active'}</span>
+        </div>
+        <div class="font-semibold text-slate-800 text-sm">${mod.label}</div>
+        <div class="text-xs text-slate-400 mt-1 leading-relaxed">${mod.detail}</div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill ${isWarning ? 'warning' : ''}" style="width:${isWarning?62:86}%"></div></div>
+          <div class="progress-meta"><span>${isWarning ? 'Action needed' : 'On track'}</span><span>${isWarning?62:86}%</span></div>
+        </div>`;
+      grid.appendChild(card);
+    });
+    refreshIcons();
+  } catch(e) {}
+}
+
+// ── DAM Assets ──────────────────────────────────────────
+async function loadDAMAssets() {
+  try {
+    const res = await fetch('/api/dam/assets');
+    damAssets = await res.json();
+    filterDAMAssets();
+  } catch(e) {}
+}
+
+function filterDAMAssets() {
+  const search = (document.getElementById('dam-search')?.value || '').toLowerCase();
+  const status = document.getElementById('dam-filter-status')?.value || '';
+  const ta = document.getElementById('dam-filter-ta')?.value || '';
+  const region = document.getElementById('dam-filter-region')?.value || '';
+
+  const filtered = damAssets.filter(a =>
+    (!search || a.name.toLowerCase().includes(search) || a.type.toLowerCase().includes(search)) &&
+    (!status || a.status === status) &&
+    (!ta || a.therapeutic === ta) &&
+    (!region || a.region === region)
+  );
+
+  const statusBadge = {
+    'Approved': 'badge-approved', 'Draft': 'badge-draft',
+    'In Review': 'badge-review', 'Expired': 'badge-expired'
+  };
+  const typeColors = {
+    'eDA':'bg-orange-50 text-orange-700','Email':'bg-orange-50 text-orange-700',
+    'Document':'bg-orange-50 text-orange-700','Print':'bg-slate-100 text-slate-700',
+    'Presentation':'bg-orange-50 text-orange-700','Module':'bg-orange-50 text-orange-700',
+    'Social':'bg-orange-50 text-orange-700','Video':'bg-orange-50 text-orange-700'
+  };
+
+  const grid = document.getElementById('dam-asset-grid');
+  const count = document.getElementById('dam-count');
+  count.textContent = `${filtered.length} of ${damAssets.length} assets`;
+
+  grid.innerHTML = filtered.map(a => `
+    <div class="asset-card">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="badge ${typeColors[a.type]||'bg-slate-100 text-slate-700'} flex-shrink-0">${a.type}</span>
+          <span class="font-medium text-slate-800 text-sm truncate">${a.name}</span>
+        </div>
+        <span class="badge ${statusBadge[a.status]||'badge-draft'} flex-shrink-0 ml-2">${a.status}</span>
+      </div>
+      <div class="flex items-center gap-3 mt-1.5">
+        <span class="text-xs text-slate-400">${a.therapeutic}</span>
+        <span class="text-slate-300">·</span>
+        <span class="text-xs text-slate-400">${a.channel}</span>
+        <span class="text-slate-300">·</span>
+        <span class="text-xs text-slate-400">${a.audience}</span>
+        <span class="text-slate-300">·</span>
+        <span class="text-xs text-slate-400">Region: ${a.region}</span>
+        <span class="text-slate-300">·</span>
+        <span class="text-xs text-slate-400">Updated ${a.updated}</span>
+      </div>
+    </div>`).join('');
+}
+
+// ── Content Lab Modules ──────────────────────────────────
+async function loadContentModules() {
+  try {
+    const res = await fetch('/api/modules');
+    contentModules = await res.json();
+    filterModules();
+  } catch(e) {}
+}
+
+function filterModules() {
+  const ta = document.getElementById('module-filter-ta')?.value || '';
+  const type = document.getElementById('module-filter-type')?.value || '';
+  const filtered = contentModules.filter(m =>
+    (!ta || m.therapeutic === ta) && (!type || m.type === type)
+  );
+  const typeColors = {
+    'Claim':'bg-orange-50 text-orange-700','Safety':'bg-orange-50 text-orange-700',
+    'Brand':'bg-orange-50 text-orange-700','Legal':'bg-slate-100 text-slate-700',
+    'Visual':'bg-orange-50 text-orange-700','Reference':'bg-slate-100 text-slate-700',
+    'CTA':'bg-orange-50 text-orange-700'
+  };
+  const lib = document.getElementById('module-library');
+  lib.innerHTML = filtered.map(m => {
+    const alreadyAdded = assembledModules.find(a => a.id === m.id);
+    return `<div class="module-card ${alreadyAdded?'selected':''}" onclick="addToCanvas('${m.id}')">
+      <div class="flex items-center justify-between mb-1">
+        <span class="badge ${typeColors[m.type]||'bg-slate-100 text-slate-700'} text-xs">${m.type}</span>
+        <span class="badge ${m.status==='Approved'?'badge-approved':'badge-review'} text-xs">${m.status}</span>
+      </div>
+      <div class="font-medium text-slate-800 text-xs mt-1">${m.name}</div>
+      <div class="text-xs text-slate-400 mt-0.5">${m.therapeutic} · ${m.channels.slice(0,2).join(', ')}${m.channels.length>2?'…':''}</div>
+      ${alreadyAdded?'<div class="text-xs text-orange-700 mt-1 font-semibold">Added to canvas</div>':''}
+    </div>`;
+  }).join('');
+}
+
+function addToCanvas(moduleId) {
+  const mod = contentModules.find(m => m.id === moduleId);
+  if (!mod || assembledModules.find(a => a.id === moduleId)) return;
+  assembledModules.push(mod);
+  renderCanvas();
+  filterModules();
+}
+
+function removeFromCanvas(moduleId) {
+  assembledModules = assembledModules.filter(m => m.id !== moduleId);
+  renderCanvas();
+  filterModules();
+}
+
+function renderCanvas() {
+  const canvas = document.getElementById('assembly-canvas');
+  const emptyMsg = document.getElementById('canvas-empty');
+  if (assembledModules.length === 0) {
+    canvas.innerHTML = '<div class="text-center py-8 text-sm text-slate-400" id="canvas-empty">Select modules from the library above to begin assembling your asset.</div>';
+    return;
+  }
+  const typeColors = {
+    'Claim':'#FFF0E8','Safety':'#FFF0E8','Brand':'#FFF0E8','Legal':'#FFF0E8',
+    'Visual':'#FFF0E8','Reference':'#FFF0E8','CTA':'#FFF0E8'
+  };
+  canvas.innerHTML = assembledModules.map((m, i) => `
+    <div class="canvas-module flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded flex items-center justify-center text-xs font-bold text-slate-600" style="background:${typeColors[m.type]||'#F1F5F9'}">${i+1}</div>
+        <div>
+          <div class="text-xs font-semibold text-slate-800">${m.name}</div>
+          <div class="text-xs text-slate-400">${m.type} · ${m.therapeutic}</div>
+        </div>
+      </div>
+      <button class="remove-btn" onclick="removeFromCanvas('${m.id}')">×</button>
+    </div>`).join('');
+}
+
+function clearCanvas() {
+  assembledModules = [];
+  renderCanvas();
+  filterModules();
+}
+
+function submitForReview() {
+  if (assembledModules.length === 0) { alert('Add at least one module to the canvas before submitting.'); return; }
+  const channel = document.getElementById('channel-select').value;
+  if (channel === 'Select Channel…') { alert('Please select a target channel before submitting.'); return; }
+  alert(`Asset submitted for MLR review.\n\nModules: ${assembledModules.length}\nChannel: ${channel}\n\nExpected approval: ${new Date(Date.now()+7*86400000).toDateString()}`);
+}
+
+// ── SCP Narrative Builder ────────────────────────────────
+function buildNarrative() {
+  const product = document.getElementById('scp-product').value;
+  const audience = document.getElementById('scp-audience').value;
+  const claim = document.getElementById('scp-claim').value;
+  if (!claim) { alert('Enter a scientific claim or data point first.'); return; }
+  const prompt = `Build a scientific narrative for ${product||'this product'} targeting ${audience}. Key claim: "${claim}". Structure it with: (1) unmet medical need context, (2) evidence statement with reference placeholder, (3) clinical implication for the HCP, (4) suggested messaging angle for the SCP.`;
+  document.getElementById('input-scp').value = prompt;
+  sendMessage('scp');
+}
+
+// ── Email QA ─────────────────────────────────────────────
+function runEmailQA() {
+  const subject = document.getElementById('email-subject').value;
+  const body = document.getElementById('email-body').value;
+  if (!subject && !body) { alert('Enter an email subject line or body to review.'); return; }
+  const prompt = `Please QA review this HCP email for :\n\nSubject: ${subject||'[not provided]'}\nBody: ${body||'[not provided]'}\n\nCheck: ABPI compliance, rendering risk, spam trigger words, fair balance, unsubscribe requirement, link/image best practices. Prioritise issues as Critical / High / Medium / Low.`;
+  document.getElementById('input-email-qa').value = prompt;
+  sendMessage('email-qa');
+}
+
+// ── Evidence Search ─────────────────────────────────────
+function runEvidenceSearch() {
+  const population = document.getElementById('pico-p')?.value || '';
+  const intervention = document.getElementById('pico-i')?.value || '';
+  const comparison = document.getElementById('pico-c')?.value || '';
+  const outcome = document.getElementById('pico-o')?.value || '';
+  if (!population && !intervention && !comparison && !outcome) {
+    alert('Add at least one PICO field before running evidence search.');
+    return;
+  }
+  const prompt = `Create an evidence synthesis plan using this PICO framework:\n\nPopulation: ${population || '[not provided]'}\nIntervention: ${intervention || '[not provided]'}\nComparison: ${comparison || '[not provided]'}\nOutcome: ${outcome || '[not provided]'}\n\nReturn: search strategy, inclusion/exclusion criteria, screening approach, extraction table fields, evidence grading method, likely risks of bias, and human review checkpoints.`;
+  document.getElementById('input-evidence').value = prompt;
+  sendMessage('evidence');
+}
+
+// ── Compliance Check ─────────────────────────────────────
+function runCompliance() {
+  const content = document.getElementById('comp-content').value;
+  if (!content) { alert('Paste content to review first.'); return; }
+  const type = document.getElementById('comp-type').value;
+  const market = document.getElementById('comp-market').value;
+  const ta = document.getElementById('comp-ta').value;
+  const prompt = `Pre-screen the following ${type} for the ${market} market (${ta} therapeutic area) against applicable pharmaceutical marketing regulations:\n\n"${content}"\n\nIdentify all compliance issues with regulatory citations, risk level (Critical/High/Medium/Low), and suggest compliant re-wording where needed.`;
+  document.getElementById('input-compliance').value = prompt;
+  sendMessage('compliance');
+}
+
+// ── Localisation ─────────────────────────────────────────
+function selectRegion(region, btn) {
+  selectedRegion = region;
+  document.getElementById('loc-market-badge').textContent = region;
+  document.querySelectorAll('#region-tabs .tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const notes = {
+    'India': 'CDSCO regulatory framework · Adapt examples to Indian clinical practice · Consider urban vs. rural HCP segments · Hindi transliteration for key terms may improve engagement',
+    'Saudi Arabia': 'SFDA guidelines apply · Respect Islamic cultural sensitivities · Align with KSA Vision 2030 health priorities · Arabic adaptation requires back-translation review',
+    'UK': 'ABPI Code governs all promotional materials · NHS formulary context important · British English spelling and measurement units (metric) required',
+    'US': 'FDA promotional materials requirements apply · Include full ISI or abbreviated ISI as appropriate · American English · Payer/formulary context for commercial messaging'
+  };
+  document.getElementById('loc-notes').textContent = notes[region] || '';
+}
+
+function runLocalisation() {
+  const source = document.getElementById('loc-source').value;
+  if (!source) { alert('Paste global master content first.'); return; }
+  const ta = document.getElementById('loc-ta').value;
+  const type = document.getElementById('loc-type').value;
+  const prompt = `Localise the following global master ${type} content for ${selectedRegion} (${ta} therapeutic area). Adapt for local HCP communication preferences, cultural nuances, and regional regulatory requirements while preserving all clinical data and safety information:\n\n"${source}"\n\nProvide: (1) Localised content, (2) Changes made and rationale, (3) Any regulatory flags for local MLR to review.`;
+  document.getElementById('input-localization').value = prompt;
+  const out = document.getElementById('loc-output');
+  out.textContent = 'Running AI localisation…';
+  sendMessage('localization');
+  // Show streaming result in output panel too
+  const origAddMsg = window.addChatMsg;
+}
+
+// ── Visual Concept Generation ─────────────────────────────
+const conceptBriefs = {
+  asterresp: {
+    format: 'HCP email hero',
+    ratio: '16:9',
+    market: 'India',
+    owner: 'Content Lab',
+    prompt: 'Create a clean HCP email hero concept for AsterResp COPD education in India: abstract airway health metaphor, calm clinical workspace, warm orange accent, clear space for approved headline and CTA, no product pack, no patient identity, no embedded efficacy claim text.'
+  },
+  oncopath: {
+    format: 'Infographic concept',
+    ratio: '1:1',
+    market: 'US',
+    owner: 'Medical Affairs',
+    prompt: 'Create a square HCP infographic concept for OncoPath biomarker testing education: structured pathway from testing eligibility to treatment discussion, evidence-linking visual blocks, clinical typography, no patient imagery, no treatment promise, no product logo.'
+  },
+  novavax: {
+    format: 'Storyboard frame',
+    ratio: '4:3',
+    market: 'UK',
+    owner: 'Medical Affairs',
+    prompt: 'Create a storyboard frame for adult immunisation HCP education: professional consultation setting represented abstractly, vaccine education materials on a clean desk, warm light, accessible composition, no brand logo, no identifiable patient, no promotional claim text.'
+  },
+  workflow: {
+    format: 'Campaign visual',
+    ratio: '16:9',
+    market: 'Global',
+    owner: 'Content Operations',
+    prompt: 'Create a modern AI content creation workflow visual for pharma: concept generation, modular content assembly, DAM governance, evidence linking, MLR review, localisation, and analytics shown as connected dashboard cards. Light mode, refined orange accent, no brand logos, no patient imagery, professional enterprise UI.'
+  }
+};
+
+function setSelectValue(id, value) {
+  const select = document.getElementById(id);
+  if (!select) return;
+  [...select.options].forEach((option, index) => {
+    if (option.text === value || option.value === value) select.selectedIndex = index;
+  });
+}
+
+function selectedGuardrails() {
+  return [...document.querySelectorAll('.concept-guardrail:checked')].map(item => item.value);
+}
+
+function applyConceptBrief(key) {
+  const brief = conceptBriefs[key] || conceptBriefs.workflow;
+  document.getElementById('media-prompt').value = brief.prompt;
+  document.getElementById('media-owner').value = brief.owner;
+  document.getElementById('media-market').value = brief.market;
+  setSelectValue('media-format', brief.format);
+  setSelectValue('media-ratio', brief.ratio);
+  copyConceptHandoff(false);
+}
+
+function buildConceptPrompt() {
+  const briefKey = document.getElementById('media-brief')?.value || 'workflow';
+  const brief = conceptBriefs[briefKey] || conceptBriefs.workflow;
+  const guardrails = selectedGuardrails();
+  const market = document.getElementById('media-market').value || brief.market;
+  const owner = document.getElementById('media-owner').value || brief.owner;
+  document.getElementById('media-prompt').value = `${brief.prompt}\n\nReview context: market ${market}; handoff owner ${owner}; output type ${document.getElementById('media-format').value}; aspect ratio ${document.getElementById('media-ratio').value}.\n\nGuardrails:\n- ${guardrails.join('\n- ')}`;
+  copyConceptHandoff(false);
+}
+
+function copyConceptHandoff(showStatus = true) {
+  const guardrails = selectedGuardrails();
+  const notes = document.getElementById('media-notes');
+  const owner = document.getElementById('media-owner')?.value || 'Content Lab';
+  const market = document.getElementById('media-market')?.value || 'Global';
+  notes.innerHTML = `
+    <div class="rounded-lg border border-slate-200 bg-white p-3">
+      <div class="font-semibold text-slate-700 mb-1">Handoff Notes</div>
+      <div>Owner: ${escapeHtml(owner)} · Market: ${escapeHtml(market)} · Guardrails selected: ${guardrails.length}</div>
+      <div class="mt-1">Next review: Content Lab fit, visual compliance risk, alt-text, MLR claim/safety placement.</div>
+    </div>`;
+  if (showStatus) document.getElementById('media-status').textContent = 'Handoff notes prepared.';
+}
+
+function useMediaPreset(kind = 'workflow') {
+  const prompts = {
+    'hcp-hero': conceptBriefs.asterresp.prompt,
+    workflow: 'Create a modern AI content creation workflow visual for pharma: concept generation, modular content assembly, DAM governance, evidence linking, MLR review, localisation, and analytics shown as connected dashboard cards. Light mode, refined orange accent, no brand logos, no patient imagery, professional enterprise UI.',
+    infographic: conceptBriefs.oncopath.prompt,
+    storyboard: conceptBriefs.novavax.prompt,
+    social: 'Create a square HCP-safe social concept for respiratory education: abstract breath pathway, clean white background, warm orange accent, minimal scientific shapes, no patients, no product pack, no efficacy text, space for approved headline.',
+    booth: 'Create a congress booth loop concept frame: modular content cards flowing through evidence, MLR, localisation, and analytics. Ambient enterprise display, light clinical palette, warm orange accents, no claims, no logos, no identifiable people.'
+  };
+  document.getElementById('media-prompt').value = prompts[kind] || prompts.workflow;
+  copyConceptHandoff(false);
+}
+
+async function generateMedia() {
+  const prompt = document.getElementById('media-prompt').value.trim();
+  const status = document.getElementById('media-status');
+  const preview = document.getElementById('media-preview');
+  const notes = document.getElementById('media-notes');
+  if (!prompt) {
+    alert('Enter a media prompt first.');
+    return;
+  }
+  status.textContent = 'Generating...';
+  notes.textContent = '';
+  preview.innerHTML = '<div class="text-sm text-slate-500">Generating visual concept...</div>';
+
+  try {
+    const res = await fetch('/api/media/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt,
+        model: document.getElementById('media-model').value,
+        format: document.getElementById('media-format').value,
+        aspect_ratio: document.getElementById('media-ratio').value,
+      })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Visual concept generation failed.');
+    if (data.images?.length) {
+      preview.innerHTML = `<img alt="Generated visual concept" src="${data.images[0].data_url}">`;
+    } else {
+      preview.innerHTML = '<div class="text-sm text-slate-500">No image returned. Try asking explicitly for an image.</div>';
+    }
+    notes.textContent = data.text || `Generated with ${data.model}.`;
+    status.textContent = 'Done';
+  } catch (err) {
+    preview.innerHTML = '<div class="text-sm text-slate-500">Visual concept generation did not complete.</div>';
+    status.textContent = 'Error';
+    notes.textContent = err.message;
+  }
+}
+
+// ── Analytics KPIs ────────────────────────────────────────
+async function loadKPIs() {
+  try {
+    const res = await fetch('/api/analytics/kpis');
+    const data = await res.json();
+    const grid = document.getElementById('kpi-grid');
+    grid.innerHTML = '';
+    const icons = {
+      mlr_cycle_time:'MLR', content_reuse_rate:'Reuse', hcp_email_open_rate:'Open',
+      click_through_rate:'CTR', assets_approved_mtd:'Live', compliance_pass_rate:'MLR',
+      modules_in_library:'Mod', avg_localization_time:'Loc'
+    };
+    Object.entries(data).forEach(([key, kpi]) => {
+      const pct = Math.min(100, Math.round((kpi.value / kpi.target) * 100));
+      const onTarget = kpi.unit === 'days' ? kpi.value <= kpi.target : kpi.value >= kpi.target * 0.95;
+      const trendUp = kpi.trend > 0;
+      const trendGood = (kpi.unit === 'days') ? !trendUp : trendUp;
+      const card = document.createElement('div');
+      card.className = 'kpi-card';
+      card.innerHTML = `
+        <div class="flex items-start justify-between mb-1">
+          <div class="text-[10px] font-black uppercase tracking-wide text-slate-500 bg-slate-100 rounded-md px-2 py-1">${icons[key]||'KPI'}</div>
+          <div class="text-xs font-semibold px-1.5 py-0.5 rounded-full ${trendGood?'bg-green-100 text-green-700':'bg-red-100 text-red-600'}">
+            ${trendUp?'↑':'↓'} ${Math.abs(kpi.trend)}%
+          </div>
+        </div>
+        <div class="font-black text-2xl text-slate-800 mt-1">${kpi.value}<span class="text-sm font-normal text-slate-400 ml-1">${kpi.unit}</span></div>
+        <div class="text-xs font-medium text-slate-600 mt-0.5">${kpi.label}</div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill ${onTarget ? '' : 'warning'}" style="width:${Math.min(pct,100)}%"></div></div>
+          <div class="progress-meta">
+            <span>${onTarget ? 'On target' : 'Needs attention'}</span>
+            <span>${Math.min(pct,100)}% · Target ${kpi.target} ${kpi.unit}</span>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+  } catch(e) {}
+}
+
+// ── Initialise ────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadAdminData();
+  mountModelSelectors();
+  loadQuickPrompts();
+  fetch('/api/health')
+    .then(res => res.json())
+    .then(data => {
+      if (Array.isArray(data.models)) {
+        mountModelSelectors(data.models);
+      }
+      if (Array.isArray(data.image_models)) {
+        const mediaModel = document.getElementById('media-model');
+        if (mediaModel) {
+          mediaModel.innerHTML = data.image_models.map(model => `<option value="${model.id}">${model.label}</option>`).join('');
+        }
+      }
+      refreshIcons();
+    })
+    .catch(() => refreshIcons());
+  refreshIcons();
+});
+</script>
+</body>
+</html>
