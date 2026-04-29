@@ -11,8 +11,8 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
-        'app-primary': '#E95722',
-        'app-accent': '#B94115',
+        'app-primary': '#000000',
+        'app-accent': '#000000',
         'app-ink': '#202124',
       }
     }
@@ -20,45 +20,47 @@ tailwind.config = {
 }
 </script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-  * { font-family: 'Roboto', Arial, sans-serif; box-sizing: border-box; }
+  * { font-family: Arial, Helvetica, sans-serif; box-sizing: border-box; }
   :root {
-    --primary: #E95722;
-    --primary-hover: #C84616;
-    --primary-soft: #FFF0E8;
-    --accent: #B94115;
-    --accent-soft: #FFF5EF;
-    --ink: #202124;
-    --muted: #5F6368;
-    --line: #E8DED8;
-    --soft: #FAF7F5;
+    --primary: #000000;
+    --primary-hover: #222222;
+    --primary-soft: #F3F3F3;
+    --accent: #000000;
+    --accent-soft: #F4F4F4;
+    --ink: #000000;
+    --muted: #666666;
+    --line: #000000;
+    --soft: #FFFFFF;
     --surface: #FFFFFF;
-    --success: #188038;
-    --warning: #B94115;
+    --success: #000000;
+    --warning: #000000;
   }
   body { background: var(--soft); color: var(--ink); }
+  body.marketing-mode .sidebar,
+  body.marketing-mode .app-topbar { display: none; }
+  body.marketing-mode #content-area { padding: 18px; }
 
   .sidebar { width: 252px; min-width: 252px; background: rgba(255,255,255,.9); backdrop-filter: blur(18px); border-right: 1px solid rgba(229,231,235,.82); }
-  .brand-mark { width: 42px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, #F07A4D, var(--primary)); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; letter-spacing: -0.02em; box-shadow: 0 8px 18px rgba(233,87,34,.18); }
+  .brand-mark { width: 42px; height: 32px; border-radius: 0; background: #000; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; letter-spacing: -0.02em; box-shadow: none; }
   .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 999px; cursor: pointer; color: var(--muted); font-size: 13px; font-weight: 600; transition: all 0.15s; margin: 2px 10px; border: 1px solid transparent; }
   .nav-item:hover { background: #F1F3F4; color: var(--ink); border-color: transparent; }
   .nav-item.active { background: var(--primary-soft); color: var(--primary); border-color: transparent; box-shadow: none; }
   .nav-icon { width: 26px; height: 26px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: #F1F3F4; color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .02em; }
   .nav-icon svg { width: 15px; height: 15px; stroke-width: 2; }
-  .nav-item.active .nav-icon { background: #FFE1D2; color: var(--primary); }
+  .nav-item.active .nav-icon { background: #FFFFFF; color: var(--primary); }
 
   .view { display: none; }
   .view.active { display: flex; flex-direction: column; height: 100%; }
 
   .module-card { background: white; border-radius: 8px; border: 1px solid var(--line); padding: 14px; cursor: pointer; transition: all 0.15s; }
-  .module-card:hover { border-color: #FFC7AA; box-shadow: 0 1px 2px rgba(32,33,36,.08); transform: translateY(-1px); }
+  .module-card:hover { border-color: #000000; box-shadow: 0 1px 2px rgba(32,33,36,.08); transform: translateY(-1px); }
   .module-card.selected { border-color: var(--primary); background: var(--primary-soft); }
 
   .asset-card { background: white; border-radius: 8px; border: 1px solid var(--line); padding: 12px 14px; transition: all 0.15s; }
-  .asset-card:hover { border-color: #FFC7AA; box-shadow: 0 1px 2px rgba(32,33,36,.08); }
+  .asset-card:hover { border-color: #000000; box-shadow: 0 1px 2px rgba(32,33,36,.08); }
 
   .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
-  .badge-approved, .badge-active, .badge-draft, .badge-review, .badge-expired, .badge-warning { background: var(--accent-soft); color: var(--accent); border: 1px solid #FFD6C2; }
+  .badge-approved, .badge-active, .badge-draft, .badge-review, .badge-expired, .badge-warning { background: var(--accent-soft); color: var(--accent); border: 1px solid #000000; }
 
   .chat-panel { display: flex; flex-direction: column; background: rgba(255,255,255,.96); border-radius: 14px; border: 1px solid var(--line); overflow: hidden; box-shadow: 0 1px 2px rgba(32,33,36,.06), 0 10px 30px rgba(32,33,36,.035); backdrop-filter: blur(18px); }
   .chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; min-height: 0; }
@@ -82,28 +84,28 @@ tailwind.config = {
   .send-btn:disabled { background: #B8C1CC; cursor: not-allowed; }
 
   .quick-prompt { background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 6px 10px; font-size: 12px; line-height: 1.35; color: var(--muted); cursor: pointer; transition: all 0.15s; text-align: left; white-space: normal; max-width: 100%; }
-  .quick-prompt:hover { background: var(--primary-soft); border-color: #FFC7AA; color: var(--primary); }
+  .quick-prompt:hover { background: var(--primary-soft); border-color: #000000; color: var(--primary); }
 
   .kpi-card { background: white; border-radius: 12px; border: 1px solid var(--line); padding: 18px; box-shadow: 0 1px 2px rgba(60,64,67,.10); }
   .progress-wrap { margin-top: 12px; }
   .progress-bar { position: relative; height: 10px; background: linear-gradient(180deg, #F1E9E4, #FAF7F5); border: 1px solid #E8DED8; border-radius: 999px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(60,64,67,.08); }
-  .progress-fill { position: relative; height: 100%; border-radius: 999px; transition: width 0.6s ease; background: linear-gradient(90deg, #F79A70, var(--primary)); box-shadow: 0 0 14px rgba(233,87,34,.22); }
+  .progress-fill { position: relative; height: 100%; border-radius: 999px; transition: width 0.6s ease; background: linear-gradient(90deg, #000000, var(--primary)); box-shadow: 0 0 14px rgba(0,0,0,.22); }
   .progress-fill::after { content: ""; position: absolute; inset: 1px 2px auto; height: 3px; border-radius: inherit; background: rgba(255,255,255,.45); }
-  .progress-fill.warning { background: linear-gradient(90deg, #FFD7C2, var(--warning)); }
+  .progress-fill.warning { background: linear-gradient(90deg, #FFFFFF, var(--warning)); }
   .progress-meta { display: flex; justify-content: space-between; align-items: center; color: #8A6F62; font-size: 11px; margin-top: 6px; }
 
   .pipeline-shell { position: relative; padding: 16px; border-radius: 16px; background: linear-gradient(180deg, rgba(255,245,239,.72), rgba(255,255,255,.9)); border: 1px solid #F1D4C4; overflow-x: auto; }
-  .pipeline-track { position: absolute; left: 34px; right: 34px; top: 58px; height: 8px; border-radius: 999px; background: linear-gradient(90deg, #FFE2D3, #F6B08F, #E95722); box-shadow: inset 0 1px 1px rgba(255,255,255,.65), 0 7px 18px rgba(233,87,34,.14); }
+  .pipeline-track { position: absolute; left: 34px; right: 34px; top: 58px; height: 8px; border-radius: 999px; background: linear-gradient(90deg, #FFFFFF, #000000, #000000); box-shadow: inset 0 1px 1px rgba(255,255,255,.65), 0 7px 18px rgba(0,0,0,.14); }
   .pipeline-row { position: relative; z-index: 1; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(136px, 1fr); gap: 12px; min-width: 1120px; }
   .pipeline-step { min-height: 112px; border: 1px solid rgba(232,222,216,.9); border-radius: 14px; padding: 12px 10px; background: rgba(255,255,255,.9); display: flex; flex-direction: column; align-items: center; justify-content: space-between; cursor: pointer; transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease; box-shadow: 0 1px 2px rgba(32,33,36,.06); }
-  .pipeline-step:hover { transform: translateY(-2px); border-color: #FFC7AA; box-shadow: 0 10px 24px rgba(233,87,34,.10); }
-  .pipeline-dot { width: 40px; height: 40px; border-radius: 13px; display: flex; align-items: center; justify-content: center; color: #fff; background: linear-gradient(135deg, #F48655, var(--primary)); box-shadow: 0 10px 20px rgba(233,87,34,.18); }
+  .pipeline-step:hover { transform: translateY(-2px); border-color: #000000; box-shadow: 0 10px 24px rgba(0,0,0,.10); }
+  .pipeline-dot { width: 40px; height: 40px; border-radius: 13px; display: flex; align-items: center; justify-content: center; color: #fff; background: linear-gradient(135deg, #000000, var(--primary)); box-shadow: 0 10px 20px rgba(0,0,0,.18); }
   .pipeline-dot svg { width: 18px; height: 18px; stroke-width: 2.25; }
-  .pipeline-step.warning .pipeline-dot { background: linear-gradient(135deg, #E7774B, var(--warning)); }
+  .pipeline-step.warning .pipeline-dot { background: linear-gradient(135deg, #000000, var(--warning)); }
   .pipeline-title { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; min-height: 28px; padding: 0 2px; }
   .pipeline-label { color: var(--ink); font-size: 11.5px; font-weight: 800; text-align: center; line-height: 1.12; white-space: normal; min-width: 0; flex: 0 1 auto; overflow-wrap: break-word; }
   .pipeline-detail { color: #7C6C64; font-size: 10px; text-align: center; line-height: 1.25; max-width: 112px; }
-  .pipeline-status { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; min-width: 22px; height: 18px; border-radius: 999px; padding: 0 6px; color: #fff; background: var(--primary); border: 1px solid rgba(185,65,21,.18); font-size: 9px; font-weight: 900; line-height: 1; box-shadow: 0 5px 12px rgba(233,87,34,.14); }
+  .pipeline-status { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; min-width: 22px; height: 18px; border-radius: 999px; padding: 0 6px; color: #fff; background: var(--primary); border: 1px solid rgba(0,0,0,.18); font-size: 9px; font-weight: 900; line-height: 1; box-shadow: 0 5px 12px rgba(0,0,0,.14); }
   .pipeline-step:nth-child(1) .pipeline-label,
   .pipeline-step:nth-child(4) .pipeline-label,
   .pipeline-step:nth-child(5) .pipeline-label { font-size: 11px; line-height: 1.08; }
@@ -129,7 +131,7 @@ tailwind.config = {
 
   .field-label { font-size: 12px; font-weight: 600; color: #64748B; margin-bottom: 4px; }
   input, textarea, select { outline: none; }
-  input:focus, textarea:focus, select:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(233,87,34,.14); }
+  input:focus, textarea:focus, select:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px rgba(0,0,0,.14); }
   .bg-white.rounded-xl, .bg-white.rounded-lg { border-color: var(--line) !important; border-radius: 12px !important; box-shadow: 0 1px 2px rgba(60,64,67,.10); }
   .top-pill { border: 1px solid var(--line); background: #fff; color: var(--ink); }
   button[style*="background"] { background: var(--primary) !important; }
@@ -146,13 +148,13 @@ tailwind.config = {
   .glass-card { background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 1px 2px rgba(32,33,36,.06), 0 12px 28px rgba(32,33,36,.035); backdrop-filter: blur(18px); }
   .metric-value { font-size: clamp(24px, 2.4vw, 32px); line-height: 1; font-weight: 700; letter-spacing: -0.02em; color: var(--primary); }
   .llm-select { margin-left: auto; border: 1px solid var(--line); background: #FFFFFF; color: #202124; border-radius: 999px; padding: 6px 28px 6px 10px; font-size: 11px; font-weight: 600; max-width: 172px; outline: none; }
-  .llm-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(233,87,34,.14); }
+  .llm-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,0,0,.14); }
   .chart-card { min-height: 260px; }
   .data-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 12px; }
   .data-table th { text-align: left; color: #5F6368; font-weight: 700; padding: 10px 12px; border-bottom: 1px solid var(--line); background: #FAFAFA; }
   .data-table td { padding: 11px 12px; border-bottom: 1px solid var(--line); color: #202124; }
   .data-table tr:last-child td { border-bottom: 0; }
-  .soft-chip { display: inline-flex; align-items: center; border-radius: 999px; padding: 3px 8px; background: var(--accent-soft); color: var(--accent); border: 1px solid #FFD6C2; font-size: 11px; font-weight: 700; }
+  .soft-chip { display: inline-flex; align-items: center; border-radius: 999px; padding: 3px 8px; background: var(--accent-soft); color: var(--accent); border: 1px solid #000000; font-size: 11px; font-weight: 700; }
   .area-chart path.line { stroke: var(--primary); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
   .area-chart path.area { fill: url(#chartGradient); opacity: .92; }
   .media-preview { min-height: 320px; display: grid; place-items: center; border: 1px dashed var(--line); border-radius: 16px; background: rgba(255,255,255,.55); overflow: hidden; }
@@ -160,7 +162,7 @@ tailwind.config = {
   .icon-tile svg { width: 17px; height: 17px; }
   .prompt-library { max-height: 188px; overflow-y: auto; padding-right: 3px; display: flex; flex-direction: column; gap: 6px; }
   .prompt-card { width: 100%; text-align: left; border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 9px 10px; cursor: pointer; transition: all .15s; }
-  .prompt-card:hover { border-color: #FFC7AA; background: var(--primary-soft); }
+  .prompt-card:hover { border-color: #000000; background: var(--primary-soft); }
   .prompt-card-title { font-size: 12px; font-weight: 800; color: var(--ink); }
   .prompt-card-sub { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.3; }
   .guardrail-item { display: flex; align-items: flex-start; gap: 10px; border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 9px 10px; cursor: pointer; }
@@ -169,9 +171,170 @@ tailwind.config = {
   .guardrail-title { display: block; font-size: 11px; font-weight: 800; color: var(--ink); line-height: 1.15; }
   .guardrail-sub { display: block; font-size: 10px; color: var(--muted); line-height: 1.25; }
   .handoff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .sidebar { border-right-color: #111; background: rgba(255,255,255,.96); }
+  .app-topbar { border-bottom-color: #111; }
+  .glass-card, .chat-panel, .module-card, .asset-card, .kpi-card,
+  .bg-white.rounded-xl, .bg-white.rounded-lg { border-color: #111 !important; border-radius: 0 !important; box-shadow: none !important; }
+  .chat-msg, .chat-input, .send-btn, .quick-prompt, .llm-select,
+  input, textarea, select, .tab-btn, .soft-chip, .badge { border-radius: 0 !important; }
+  .nav-item { border-radius: 0; margin-inline: 8px; }
+  .nav-item.active { background: #111; color: #fff; }
+  .nav-item.active .nav-icon { background: #fff; color: #111; }
+  .nav-icon { border-radius: 0; }
+  .editorial-page { gap: 18px; }
+  .editorial-hero { min-height: 520px; border-radius: 0; border: 1px solid #111; background: #050505; color: #fff; padding: clamp(28px, 5vw, 64px); display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(340px, .75fr); gap: 44px; align-items: stretch; position: relative; overflow: hidden; }
+  .editorial-hero::after { content: ""; position: absolute; inset: auto 0 0; height: 1px; background: #fff; opacity: .45; }
+  .eyebrow { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .14em; color: #000000; }
+  .hero-title { font-size: clamp(54px, 8.2vw, 128px); line-height: .86; letter-spacing: -0.06em; font-weight: 900; max-width: 920px; }
+  .hero-copy { font-size: clamp(16px, 1.35vw, 22px); line-height: 1.35; color: rgba(255,255,255,.72); max-width: 680px; margin-top: 22px; }
+  .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 30px; }
+  .editorial-btn { border: 1px solid #111; background: #111; color: #fff; border-radius: 999px; padding: 11px 18px; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; cursor: pointer; transition: transform .16s, background .16s; }
+  .editorial-btn:hover { transform: translateY(-1px); background: #000000; border-color: #000000; }
+  .editorial-btn.light { background: #fff; color: #111; border-color: #fff; }
+  .editorial-btn.ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.5); }
+  .hero-panel { border: 1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); display: flex; flex-direction: column; justify-content: space-between; padding: 18px; min-height: 100%; }
+  .hero-number { font-size: clamp(58px, 8vw, 112px); line-height: .82; font-weight: 900; letter-spacing: -0.08em; }
+  .hero-panel-row { border-top: 1px solid rgba(255,255,255,.25); padding-top: 12px; display: grid; grid-template-columns: 1fr auto; gap: 18px; font-size: 12px; color: rgba(255,255,255,.7); }
+  .marquee-strip { border: 1px solid #111; background: #fff; overflow: hidden; white-space: nowrap; padding: 14px 0 13px; line-height: 1; }
+  .marquee-strip span { display: inline-block; font-size: 12px; line-height: 1; font-weight: 900; text-transform: uppercase; letter-spacing: .16em; padding-right: 42px; animation: marquee 24s linear infinite; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .editorial-section { border: 1px solid #111; background: #fff; padding: clamp(22px, 3vw, 36px); }
+  .section-title { font-size: clamp(34px, 4vw, 64px); line-height: .95; letter-spacing: -0.045em; font-weight: 900; color: #111; }
+  .split-grid { display: grid; grid-template-columns: .82fr 1.18fr; gap: 28px; align-items: start; }
+  .process-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border: 1px solid #111; border-bottom: 0; border-right: 0; }
+  .process-card { min-height: 190px; border-right: 1px solid #111; border-bottom: 1px solid #111; padding: 18px; display: flex; flex-direction: column; justify-content: space-between; background: #fff; }
+  .process-num { font-size: 12px; font-weight: 900; color: #000000; }
+  .process-card h3 { font-size: 18px; font-weight: 900; letter-spacing: -.03em; color: #111; }
+  .process-card p { font-size: 12px; line-height: 1.45; color: #5F6368; }
+  .black-card { background: #111; color: #fff; border: 1px solid #111; padding: 22px; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; }
+  .persona-card { border: 1px solid #111; background: #fff; padding: 18px; display: grid; gap: 14px; min-height: 220px; cursor: pointer; transition: background .15s, color .15s, transform .15s; }
+  .persona-card:hover, .persona-card.selected { background: #111; color: #fff; transform: translateY(-2px); }
+  .persona-card:hover .text-slate-500, .persona-card.selected .text-slate-500 { color: rgba(255,255,255,.65) !important; }
+  .auth-shell { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: .9fr 1.1fr; min-height: 640px; border: 1px solid #111; background: #fff; }
+  .auth-panel-dark { background: #111; color: #fff; padding: clamp(28px, 4vw, 52px); display: flex; flex-direction: column; justify-content: space-between; }
+  .auth-form { padding: clamp(28px, 4vw, 52px); display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+  .auth-form input, .auth-form select { border: 1px solid #111; border-radius: 0; padding: 12px 13px; font-size: 13px; background: #fff; }
+  .auth-form label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; color: #111; }
+  .admin-table { width: 100%; border-collapse: collapse; font-size: 12px; border: 1px solid #111; background: #fff; }
+  .admin-table th, .admin-table td { border-bottom: 1px solid #111; padding: 12px; text-align: left; }
+  .admin-table th { background: #111; color: #fff; font-weight: 900; text-transform: uppercase; letter-spacing: .06em; font-size: 10px; }
+  .role-pill { display: inline-flex; border: 1px solid #111; padding: 4px 8px; border-radius: 999px; font-size: 10px; font-weight: 900; text-transform: uppercase; }
+  .marketing-page { gap: 18px; color: #111; }
+  .marketing-nav { position: sticky; top: -20px; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 14px 16px; border: 1px solid #111; background: rgba(255,255,255,.94); backdrop-filter: blur(18px); }
+  .marketing-links { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .marketing-link { border: 1px solid transparent; background: transparent; color: #111; padding: 8px 10px; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .07em; cursor: pointer; }
+  .marketing-link:hover { border-color: #111; background: #FFFFFF; }
+  .marketing-hero { min-height: 640px; border: 1px solid #111; background: #111; color: #fff; display: grid; grid-template-columns: minmax(0, 1.16fr) minmax(360px, .84fr); gap: 0; overflow: hidden; }
+  .marketing-hero-main { padding: clamp(28px, 5.4vw, 76px); display: flex; flex-direction: column; justify-content: space-between; min-height: 100%; }
+  .marketing-hero-visual { border-left: 1px solid rgba(255,255,255,.22); background: radial-gradient(circle at 35% 18%, rgba(0,0,0,.34), transparent 28%), linear-gradient(145deg, #171717, #050505); padding: 22px; display: grid; align-content: end; gap: 14px; }
+  .marketing-kpi-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid rgba(255,255,255,.25); border-bottom: 0; border-right: 0; }
+  .marketing-kpi { min-height: 132px; border-right: 1px solid rgba(255,255,255,.25); border-bottom: 1px solid rgba(255,255,255,.25); padding: 16px; display: flex; flex-direction: column; justify-content: space-between; }
+  .marketing-kpi strong { font-size: clamp(32px, 4vw, 58px); line-height: .9; letter-spacing: -.06em; }
+  .marketing-window { border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.08); backdrop-filter: blur(20px); padding: 14px; }
+  .marketing-window-row { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 11px 0; border-top: 1px solid rgba(255,255,255,.16); font-size: 12px; color: rgba(255,255,255,.72); }
+  .marketing-window-row:first-child { border-top: 0; }
+  .marketing-dot { width: 9px; height: 9px; border-radius: 999px; background: var(--primary); box-shadow: 0 0 0 4px rgba(0,0,0,.16); }
+  .marketing-band { border: 1px solid #111; background: #fff; padding: clamp(26px, 4vw, 52px); }
+  .marketing-band.tinted { background: #FFFFFF; }
+  .marketing-intro { display: grid; grid-template-columns: .8fr 1.2fr; gap: 34px; align-items: end; margin-bottom: 26px; }
+  .marketing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid #111; border-bottom: 0; border-right: 0; }
+  .marketing-card { min-height: 242px; border-right: 1px solid #111; border-bottom: 1px solid #111; padding: 20px; background: #fff; display: flex; flex-direction: column; justify-content: space-between; gap: 22px; transition: background .16s, color .16s, transform .16s; }
+  .marketing-card:hover { background: #111; color: #fff; transform: translateY(-2px); }
+  .marketing-card:hover p, .marketing-card:hover .mini-meta { color: rgba(255,255,255,.68); }
+  .marketing-icon { width: 42px; height: 42px; border: 1px solid #111; display: inline-flex; align-items: center; justify-content: center; background: #FFFFFF; color: #000000; }
+  .marketing-card:hover .marketing-icon { background: #000000; color: #fff; border-color: #000000; }
+  .marketing-icon svg { width: 19px; height: 19px; stroke-width: 2.1; }
+  .mini-meta { color: #5F6368; font-size: 11px; text-transform: uppercase; font-weight: 900; letter-spacing: .08em; }
+  .solution-row { display: grid; grid-template-columns: 1fr 1.55fr auto; gap: 22px; align-items: center; padding: 22px 0; border-top: 1px solid #111; }
+  .solution-row:last-child { border-bottom: 1px solid #111; }
+  .industry-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .industry-tile { border: 1px solid #111; background: #fff; padding: 18px; min-height: 162px; display: flex; flex-direction: column; justify-content: space-between; }
+  .testimonial-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; }
+  .quote-card { border: 1px solid #111; background: #111; color: #fff; padding: clamp(26px, 4vw, 48px); min-height: 330px; display: flex; flex-direction: column; justify-content: space-between; }
+  .quote-card.light { background: #fff; color: #111; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .price-card { border: 1px solid #111; background: #fff; padding: 22px; min-height: 360px; display: flex; flex-direction: column; justify-content: space-between; }
+  .price-card.featured { background: #111; color: #fff; }
+  .price-card.featured .editorial-btn { background: #fff; color: #111; border-color: #fff; }
+  .console-panel { display: grid; grid-template-columns: .9fr 1.1fr; border: 1px solid #111; background: #fff; min-height: 560px; }
+  .console-copy { background: #111; color: #fff; padding: clamp(26px, 4vw, 52px); display: flex; flex-direction: column; justify-content: space-between; }
+  .console-forms { padding: clamp(22px, 3vw, 38px); display: grid; gap: 14px; align-content: center; }
+  .inline-auth { border: 1px solid #111; padding: 16px; display: grid; gap: 10px; background: #fff; }
+  .inline-auth input, .inline-auth select { border: 1px solid #111; padding: 10px 11px; font-size: 12px; }
+  .reach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .contact-card { border: 1px solid #111; padding: 22px; background: #fff; min-height: 240px; }
+  .contact-card textarea, .contact-card input { width: 100%; border: 1px solid #111; padding: 11px; font-size: 12px; margin-top: 8px; }
+  .marketing-page, .site-page { gap: 18px; color: #000; background: #fff; }
+  .marketing-page.view.active, .site-page.view.active { height: auto; min-height: 100%; }
+  .marketing-mode .text-slate-400,
+  .marketing-mode .text-slate-500,
+  .marketing-mode .text-slate-600,
+  .marketing-mode .text-slate-700 { color: #000 !important; opacity: .62; }
+  .marketing-nav { top: -18px; border-color: #000; background: #fff; backdrop-filter: none; }
+  .marketing-link:hover { border-color: #000; background: #000; color: #fff; }
+  .eyebrow { color: #000; }
+  .marketing-hero { min-height: 760px; background: #000; border-color: #000; overflow: visible; }
+  .marketing-hero-visual { background: #000; border-left-color: rgba(255,255,255,.34); }
+  .marketing-window { background: #fff; color: #000; border-color: #fff; backdrop-filter: none; }
+  .marketing-window .eyebrow, .marketing-window .mini-meta { color: #000 !important; }
+  .marketing-window-row { border-top-color: #000; color: #000; }
+  .marketing-dot { background: #000; box-shadow: none; border: 1px solid #000; }
+  .editorial-btn { border-radius: 999px; background: #000; color: #fff; border-color: #000; }
+  .editorial-btn:hover { background: #fff; color: #000; border-color: #000; transform: none; }
+  .editorial-btn.light { background: #fff; color: #000; border-color: #fff; }
+  .editorial-btn.light:hover { background: #000; color: #fff; border-color: #fff; }
+  .editorial-btn.ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.72); }
+  .marketing-icon { background: #fff; color: #000; }
+  .marketing-card:hover .marketing-icon { background: #fff; color: #000; border-color: #fff; }
+  .marketing-band.tinted { background: #fff; }
+  .marketing-card:hover { background: #000; color: #fff; }
+  .hero-title { letter-spacing: -.075em; }
+  .site-hero { min-height: 430px; border: 1px solid #000; background: #000; color: #fff; padding: clamp(32px, 6vw, 78px); display: flex; flex-direction: column; justify-content: space-between; }
+  .site-hero .eyebrow { color: #fff; }
+  .site-title { font-size: clamp(64px, 11vw, 164px); line-height: .78; letter-spacing: -.085em; font-weight: 900; text-transform: uppercase; }
+  .site-copy { max-width: 820px; font-size: clamp(18px, 2vw, 28px); line-height: 1.1; color: rgba(255,255,255,.72); margin-top: 28px; }
+  .detroit-page-nav { display: flex; align-items: center; justify-content: space-between; border: 1px solid #000; background: #fff; padding: 16px; gap: 16px; }
+  .detroit-page-nav .marketing-links { justify-content: flex-end; }
+  .option-rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(320px, 31vw); gap: 14px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; }
+  .option-card { min-height: 500px; border: 1px solid #000; background: #fff; color: #000; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; scroll-snap-align: start; }
+  .option-card.dark { background: #000; color: #fff; }
+  .option-card h3 { font-size: clamp(30px, 3vw, 54px); line-height: .88; letter-spacing: -.06em; font-weight: 900; text-transform: uppercase; }
+  .option-card p { font-size: 14px; line-height: 1.45; color: #666; }
+  .option-card.dark p, .option-card.dark .mini-meta { color: rgba(255,255,255,.62); }
+  .option-card .big-num { font-size: clamp(64px, 8vw, 132px); line-height: .75; letter-spacing: -.09em; font-weight: 900; }
+  .screenshot-rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(420px, 46vw); gap: 14px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; }
+  .screenshot-card { border: 1px solid #000; background: #fff; min-height: 430px; padding: 16px; scroll-snap-align: start; display: flex; flex-direction: column; gap: 14px; }
+  .mock-screen { flex: 1; border: 1px solid #000; background: #000; color: #fff; padding: 16px; display: grid; gap: 12px; align-content: start; overflow: hidden; }
+  .mock-top { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #fff; padding-bottom: 10px; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; }
+  .mock-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 10px; }
+  .mock-block { min-height: 78px; border: 1px solid #fff; padding: 10px; background: #111; }
+  .mock-block.light { background: #fff; color: #000; }
+  .demo-panel { display: grid; grid-template-columns: .82fr 1.18fr; gap: 16px; border: 1px solid #000; background: #fff; }
+  .demo-copy { background: #000; color: #fff; padding: clamp(26px, 4vw, 54px); display: flex; flex-direction: column; justify-content: space-between; }
+  .demo-copy .eyebrow { color: #fff; }
+  .demo-form { padding: clamp(22px, 3vw, 38px); display: grid; gap: 12px; align-content: center; }
+  .demo-form input, .demo-form select, .demo-form textarea { border: 1px solid #000; padding: 12px; font-size: 13px; width: 100%; background: #fff; color: #000; margin: 0; }
+  .demo-form label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; }
+  .page-split { display: grid; grid-template-columns: .86fr 1.14fr; gap: 18px; }
+  .black-panel { border: 1px solid #000; background: #000; color: #fff; padding: clamp(24px, 4vw, 54px); min-height: 420px; display: flex; flex-direction: column; justify-content: space-between; }
+  .white-panel { border: 1px solid #000; background: #fff; color: #000; padding: clamp(24px, 4vw, 54px); min-height: 420px; display: flex; flex-direction: column; justify-content: space-between; }
+  @media (max-width: 1180px) {
+    .editorial-hero, .split-grid, .auth-shell { grid-template-columns: 1fr; }
+    .process-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .marketing-hero, .marketing-intro, .console-panel, .testimonial-grid, .reach-grid, .demo-panel, .page-split { grid-template-columns: 1fr; }
+    .marketing-hero-visual { border-left: 0; border-top: 1px solid rgba(255,255,255,.22); }
+    .marketing-grid, .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .industry-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .solution-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .marketing-grid, .pricing-grid, .industry-strip, .marketing-kpi-grid { grid-template-columns: 1fr; }
+    .marketing-nav { align-items: flex-start; flex-direction: column; }
+    .option-rail, .screenshot-rail { grid-auto-columns: minmax(280px, 88vw); }
+  }
 </style>
 </head>
-<body class="flex h-screen overflow-hidden">
+<body class="flex h-screen overflow-hidden marketing-mode">
 
 <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
 <div class="sidebar flex flex-col py-4 overflow-y-auto flex-shrink-0">
@@ -186,9 +349,31 @@ tailwind.config = {
     </div>
   </div>
 
+  <div class="section-header">Product</div>
+  <div class="nav-item active" onclick="navigate('home')" id="nav-home">
+    <span class="nav-icon"><i data-lucide="sparkles"></i></span> Home
+  </div>
+  <div class="nav-item" onclick="navigate('personas')" id="nav-personas">
+    <span class="nav-icon"><i data-lucide="users-round"></i></span> User Personas
+  </div>
+
+  <div class="section-header">Access</div>
+  <div class="nav-item" onclick="navigate('login')" id="nav-login">
+    <span class="nav-icon"><i data-lucide="log-in"></i></span> Login
+  </div>
+  <div class="nav-item" onclick="navigate('signup')" id="nav-signup">
+    <span class="nav-icon"><i data-lucide="user-plus"></i></span> Sign Up
+  </div>
+
   <div class="section-header">Overview</div>
-  <div class="nav-item active" onclick="navigate('admin')" id="nav-admin">
+  <div class="nav-item" onclick="navigate('admin')" id="nav-admin">
     <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span> Admin Dashboard
+  </div>
+  <div class="nav-item" onclick="navigate('admin-panel')" id="nav-admin-panel">
+    <span class="nav-icon"><i data-lucide="panel-top"></i></span> Admin Panel
+  </div>
+  <div class="nav-item" onclick="navigate('super-admin')" id="nav-super-admin">
+    <span class="nav-icon"><i data-lucide="shield-plus"></i></span> Super Admin
   </div>
 
   <div class="section-header">Workflows</div>
@@ -224,7 +409,7 @@ tailwind.config = {
 
   <div class="mt-auto px-4 pt-4 border-t border-slate-200 mx-2">
     <div class="flex items-center gap-2">
-      <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:#E95722">WS</div>
+      <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white" style="background:#000000">WS</div>
       <div>
         <div class="text-slate-800 text-xs font-semibold">Workspace</div>
         <div class="text-xs text-slate-500">Content Ops</div>
@@ -239,8 +424,8 @@ tailwind.config = {
   <!-- Top Bar -->
   <div class="app-topbar px-6 py-3 flex items-center justify-between flex-shrink-0">
     <div>
-      <div id="topbar-title" class="font-bold text-slate-800 text-base">Admin Dashboard</div>
-      <div id="topbar-sub" class="text-xs text-slate-500 mt-0.5">End-to-end content workflow orchestration</div>
+      <div id="topbar-title" class="font-bold text-slate-800 text-base">AI Content Platform</div>
+      <div id="topbar-sub" class="text-xs text-slate-500 mt-0.5">Marketing website · offerings, solutions, console access</div>
     </div>
     <div class="flex items-center gap-3">
       <div class="hidden lg:flex items-center gap-4 text-xs font-semibold text-slate-600">
@@ -255,10 +440,448 @@ tailwind.config = {
   </div>
 
   <!-- Content Area -->
-  <div class="flex-1 overflow-y-auto p-5">
+  <div id="content-area" class="flex-1 overflow-y-auto p-5">
+
+    <!-- ══════════ MARKETING HOME ══════════ -->
+    <div id="view-home" class="view active marketing-page">
+      <nav class="marketing-nav">
+        <div class="flex items-center gap-3">
+          <div class="brand-mark text-sm">AI</div>
+          <div>
+            <div class="text-sm font-black leading-none">Content Studio</div>
+            <div class="text-[11px] text-slate-500 font-semibold mt-1">Regulated content operating system</div>
+          </div>
+        </div>
+        <div class="marketing-links">
+          <button class="marketing-link" onclick="navigate('offerings')">Offerings</button>
+          <button class="marketing-link" onclick="navigate('solutions')">Solutions</button>
+          <button class="marketing-link" onclick="navigate('industries')">Industries</button>
+          <button class="marketing-link" onclick="navigate('reach-out')">Reach out</button>
+          <button class="marketing-link" onclick="navigate('buy-now')">Buy Now</button>
+          <button class="editorial-btn" onclick="scrollHomeSection('console')">Console</button>
+        </div>
+      </nav>
+
+      <section class="marketing-hero">
+        <div class="marketing-hero-main">
+          <div>
+            <div class="eyebrow">AI content creation platform</div>
+            <h1 class="hero-title mt-5">Launch compliant content without the chaos.</h1>
+            <p class="hero-copy">A commercial AI workspace for pharma and life-sciences teams to plan, create, govern, review, localise, and measure promotional and medical content from one clean console.</p>
+            <div class="hero-actions">
+              <button class="editorial-btn light" onclick="scrollHomeSection('console')">Open console</button>
+              <button class="editorial-btn ghost" onclick="navigate('buy-now')">View plans</button>
+              <button class="editorial-btn ghost" onclick="navigate('offerings')">Explore product</button>
+            </div>
+          </div>
+          <div class="marketing-kpi-grid mt-12">
+            <div class="marketing-kpi"><span class="text-white/50 text-xs font-black uppercase">MLR cycle target</span><strong>7.8d</strong></div>
+            <div class="marketing-kpi"><span class="text-white/50 text-xs font-black uppercase">Content reuse</span><strong>68%</strong></div>
+            <div class="marketing-kpi"><span class="text-white/50 text-xs font-black uppercase">First-pass checks</span><strong>94%</strong></div>
+            <div class="marketing-kpi"><span class="text-white/50 text-xs font-black uppercase">Assets governed</span><strong>2.8k</strong></div>
+          </div>
+        </div>
+        <div class="marketing-hero-visual">
+          <div class="marketing-window">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <div class="eyebrow">Live pipeline</div>
+                <div class="text-white font-black text-3xl mt-1">Q2 respiratory launch</div>
+              </div>
+              <span class="role-pill text-white border-white/40">Demo</span>
+            </div>
+            <div class="marketing-window-row"><span class="marketing-dot"></span><span>Content Lab assembled 14 modules</span><strong>Ready</strong></div>
+            <div class="marketing-window-row"><span class="marketing-dot"></span><span>Evidence links validated for 9 claims</span><strong>92%</strong></div>
+            <div class="marketing-window-row"><span class="marketing-dot"></span><span>MLR pre-screen flagged 3 edits</span><strong>Review</strong></div>
+            <div class="marketing-window-row"><span class="marketing-dot"></span><span>India localisation in progress</span><strong>03 May</strong></div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="marketing-window"><div class="mini-meta text-white/50">Next action</div><div class="text-xl font-black mt-2">Resolve fair-balance note</div></div>
+            <div class="marketing-window"><div class="mini-meta text-white/50">Owner</div><div class="text-xl font-black mt-2">Compliance reviewer</div></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="marquee-strip">
+        <span>MODULAR CONTENT · DAM GOVERNANCE · MEDICAL NARRATIVES · EVIDENCE SYNTHESIS · EMAIL QA · MLR PRE-SCREENING · LOCALISATION · ANALYTICS · </span>
+        <span>MODULAR CONTENT · DAM GOVERNANCE · MEDICAL NARRATIVES · EVIDENCE SYNTHESIS · EMAIL QA · MLR PRE-SCREENING · LOCALISATION · ANALYTICS · </span>
+      </div>
+
+      <section class="marketing-band">
+        <div class="marketing-intro">
+          <div>
+            <div class="eyebrow">Product preview</div>
+            <h2 class="section-title mt-3">A campaign room, evidence desk, review desk, and launch console.</h2>
+          </div>
+          <p class="text-slate-600 text-lg leading-relaxed">Scroll the product screenshots. These placeholders describe what the full console is doing without relying on decorative stock imagery.</p>
+        </div>
+        <div class="screenshot-rail">
+          <div class="screenshot-card">
+            <div class="mock-screen">
+              <div class="mock-top"><span>Offering / Content Lab</span><span>01</span></div>
+              <div class="mock-grid"><div class="mock-block light"><strong>Module Library</strong><br>Claims, safety, references, CTA blocks</div><div class="mock-block">MLR readiness<br><strong>86%</strong></div></div>
+              <div class="mock-block">Reusable campaign canvas for HCP email, eDA, congress, and leave-behind assets.</div>
+            </div>
+            <div><div class="mini-meta">Screenshot placeholder</div><h3 class="text-2xl font-black">Offerings are shown as production surfaces.</h3></div>
+          </div>
+          <div class="screenshot-card">
+            <div class="mock-screen">
+              <div class="mock-top"><span>Solution / Review readiness</span><span>02</span></div>
+              <div class="mock-block light"><strong>3 risks found</strong><br>Fair balance, substantiation, missing reference</div>
+              <div class="mock-grid"><div class="mock-block">Owner<br><strong>Compliance</strong></div><div class="mock-block">Due<br><strong>03 May</strong></div></div>
+            </div>
+            <div><div class="mini-meta">Screenshot placeholder</div><h3 class="text-2xl font-black">Solutions explain the workflow outcome.</h3></div>
+          </div>
+          <div class="screenshot-card">
+            <div class="mock-screen">
+              <div class="mock-top"><span>Industry / Affiliate launch</span><span>03</span></div>
+              <div class="mock-grid"><div class="mock-block light">India adaptation<br><strong>In progress</strong></div><div class="mock-block">UK pack<br><strong>Ready</strong></div></div>
+              <div class="mock-block">Market-specific review notes, cultural adaptation, and approved master content lineage.</div>
+            </div>
+            <div><div class="mini-meta">Screenshot placeholder</div><h3 class="text-2xl font-black">Industry pages show use-case depth.</h3></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="marketing-band tinted">
+        <div class="marketing-intro">
+          <div>
+            <div class="eyebrow">Customers</div>
+            <h2 class="section-title mt-3">Teams use it to make review feel less brittle.</h2>
+          </div>
+          <p class="text-slate-600 text-lg leading-relaxed">Illustrative testimonials from realistic buyer personas in content operations, medical affairs, and compliance.</p>
+        </div>
+        <div class="testimonial-grid">
+          <div class="quote-card">
+            <p class="text-4xl font-black leading-tight">“We finally see where content slows down before the review meeting starts.”</p>
+            <div><div class="font-black">Maya Rao</div><div class="text-white/50 text-sm">Director, Content Operations · Global respiratory portfolio</div></div>
+          </div>
+          <div class="grid gap-4">
+            <div class="quote-card light"><p class="text-2xl font-black leading-tight">“The evidence prompts save our writers from starting with an empty page.”</p><div><div class="font-black">Dr. Elena Voss</div><div class="text-slate-500 text-sm">Medical Affairs Lead</div></div></div>
+            <div class="quote-card light"><p class="text-2xl font-black leading-tight">“It helps marketing make better choices before sending work to MLR.”</p><div><div class="font-black">Rohan Iyer</div><div class="text-slate-500 text-sm">Compliance Reviewer</div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="marketing-band">
+        <div class="demo-panel">
+          <div class="demo-copy">
+            <div>
+              <div class="eyebrow">Book a demo</div>
+              <h2 class="section-title mt-3" style="color:#fff">See the product with your launch data.</h2>
+              <p class="text-white/60 text-lg leading-relaxed mt-5">Use this homepage section for demo conversion. The full reach-out page gives a deeper enterprise contact flow.</p>
+            </div>
+            <button class="editorial-btn light" onclick="navigate('reach-out')">Open reach-out page</button>
+          </div>
+          <form class="demo-form" onsubmit="handleDemoBooking(event)">
+            <label>Work email</label>
+            <input id="demo-email" type="email" value="work.email@example.com">
+            <label>Team type</label>
+            <select id="demo-team"><option>Brand / Marketing</option><option>Medical Affairs</option><option>MLR / Compliance</option><option>Regional Affiliate</option><option>Enterprise Content Ops</option></select>
+            <label>What should the demo show?</label>
+            <textarea id="demo-message" rows="4">Show a Q2 HCP campaign moving from brief to MLR-ready content and localisation.</textarea>
+            <button class="editorial-btn" type="submit">Book demo</button>
+            <div id="demo-status" class="text-xs text-slate-500"></div>
+          </form>
+        </div>
+      </section>
+
+      <section id="console" class="marketing-band tinted">
+        <div class="console-panel">
+          <div class="console-copy">
+            <div>
+              <div class="eyebrow">Console</div>
+              <h2 class="hero-title mt-5" style="font-size:clamp(46px,6vw,92px)">Enter the product workspace.</h2>
+              <p class="text-white/60 text-lg leading-relaxed mt-5">Sign up for a demo workspace, log in as a team role, or open the console directly to inspect the current prototype modules.</p>
+            </div>
+            <div class="grid grid-cols-3 gap-3 text-xs text-white/60">
+              <div><strong class="text-white block text-2xl">8</strong>core modules</div>
+              <div><strong class="text-white block text-2xl">5</strong>role personas</div>
+              <div><strong class="text-white block text-2xl">4</strong>markets</div>
+            </div>
+          </div>
+          <div class="console-forms">
+            <form class="inline-auth" onsubmit="handleConsoleSignup(event)">
+              <div><div class="mini-meta">Create account</div><h3 class="text-2xl font-black mt-1">Start a demo workspace</h3></div>
+              <input id="console-signup-name" value="Anika Mehta" aria-label="Name">
+              <input id="console-signup-email" type="email" value="anika.mehta@example.com" aria-label="Email">
+              <select id="console-signup-role" aria-label="Primary role"><option>Content Strategist</option><option>Medical Affairs</option><option>Compliance Reviewer</option><option>Regional Manager</option><option>Admin</option></select>
+              <button class="editorial-btn" type="submit">Sign up</button>
+              <div id="console-signup-status" class="text-xs text-slate-500"></div>
+            </form>
+            <form class="inline-auth" onsubmit="handleConsoleLogin(event)">
+              <div><div class="mini-meta">Login</div><h3 class="text-2xl font-black mt-1">Use a demo role</h3></div>
+              <input id="console-login-email" type="email" value="content.lead@example.com" aria-label="Login email">
+              <select id="console-login-role" aria-label="Login role"><option>Admin</option><option>Super Admin</option><option>Content Strategist</option><option>Medical Affairs</option><option>Compliance Reviewer</option></select>
+              <button class="editorial-btn" type="submit">Login to console</button>
+              <button class="editorial-btn" type="button" onclick="navigate('admin')">Open console dashboard</button>
+              <div id="console-login-status" class="text-xs text-slate-500"></div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ══════════ OFFERINGS PAGE ══════════ -->
+    <div id="view-offerings" class="view site-page">
+      <nav class="detroit-page-nav">
+        <button class="marketing-link" onclick="navigate('home')">Content Studio</button>
+        <div class="marketing-links">
+          <button class="marketing-link" onclick="navigate('solutions')">Solutions</button>
+          <button class="marketing-link" onclick="navigate('industries')">Industries</button>
+          <button class="marketing-link" onclick="navigate('buy-now')">Buy Now</button>
+          <button class="editorial-btn" onclick="navigate('home'); setTimeout(()=>scrollHomeSection('console'), 60)">Console</button>
+        </div>
+      </nav>
+      <section class="site-hero">
+        <div><div class="eyebrow">Offerings</div><h1 class="site-title mt-6">Product Surfaces</h1></div>
+        <p class="site-copy">A scrollable set of workspaces for regulated content creation, review preparation, evidence handling, localisation, and performance intelligence.</p>
+      </section>
+      <section class="marketing-band">
+        <div class="option-rail">
+          <div class="option-card dark"><div class="big-num">01</div><div><h3>Content Lab</h3><p>Modular assembly, channel briefs, approved claims, safety blocks, CTAs, and campaign handoff.</p></div><button class="editorial-btn light" onclick="navigate('content-lab')">Open</button></div>
+          <div class="option-card"><div class="big-num">02</div><div><h3>DAM Governance</h3><p>Metadata, lifecycle, usage rights, expiry control, duplicate detection, and searchable asset records.</p></div><button class="editorial-btn" onclick="navigate('dam')">Open</button></div>
+          <div class="option-card dark"><div class="big-num">03</div><div><h3>Medical Narrative</h3><p>SCP and IMCP planning with evidence-aware narrative support and reference placeholders.</p></div><button class="editorial-btn light" onclick="navigate('scp')">Open</button></div>
+          <div class="option-card"><div class="big-num">04</div><div><h3>Evidence Desk</h3><p>PICO plans, literature screening, extraction tables, evidence grading, and study gap detection.</p></div><button class="editorial-btn" onclick="navigate('evidence')">Open</button></div>
+          <div class="option-card dark"><div class="big-num">05</div><div><h3>MLR Pre-Screen</h3><p>Fair balance, substantiation, reference, safety, superlative, and market watchout checks before formal review.</p></div><button class="editorial-btn light" onclick="navigate('compliance')">Open</button></div>
+          <div class="option-card"><div class="big-num">06</div><div><h3>Analytics</h3><p>Cycle time, reuse, engagement, approval quality, cost-to-produce, and launch readiness intelligence.</p></div><button class="editorial-btn" onclick="navigate('analytics')">Open</button></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ══════════ SOLUTIONS PAGE ══════════ -->
+    <div id="view-solutions" class="view site-page">
+      <nav class="detroit-page-nav">
+        <button class="marketing-link" onclick="navigate('home')">Content Studio</button>
+        <div class="marketing-links">
+          <button class="marketing-link" onclick="navigate('offerings')">Offerings</button>
+          <button class="marketing-link" onclick="navigate('industries')">Industries</button>
+          <button class="marketing-link" onclick="navigate('reach-out')">Reach out</button>
+        </div>
+      </nav>
+      <section class="site-hero">
+        <div><div class="eyebrow">Solutions</div><h1 class="site-title mt-6">Launch Systems</h1></div>
+        <p class="site-copy">Each solution is a complete operating path: plan the work, create the asset, prepare review, localise safely, and measure the outcome.</p>
+      </section>
+      <section class="marketing-band">
+        <div class="option-rail">
+          <div class="option-card"><div class="mini-meta">Brand launch</div><div><h3>Campaign Command</h3><p>Turn a brief into channel-specific HCP assets with modular content, owner tracking, and readiness scoring.</p></div><button class="editorial-btn" onclick="navigate('admin')">View flow</button></div>
+          <div class="option-card dark"><div class="mini-meta">Medical accuracy</div><div><h3>Evidence-To-Claim</h3><p>Connect claims to evidence plans, narrative structure, references, and medical review watchpoints.</p></div><button class="editorial-btn light" onclick="navigate('evidence')">View flow</button></div>
+          <div class="option-card"><div class="mini-meta">Review readiness</div><div><h3>MLR Rework Cutdown</h3><p>Catch preventable review issues before submission and give writers precise revision guidance.</p></div><button class="editorial-btn" onclick="navigate('compliance')">View flow</button></div>
+          <div class="option-card dark"><div class="mini-meta">Affiliate launch</div><div><h3>Global-To-Local</h3><p>Adapt master assets for India, UK, US, and Saudi Arabia with regulatory and cultural context intact.</p></div><button class="editorial-btn light" onclick="navigate('localization')">View flow</button></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ══════════ INDUSTRIES PAGE ══════════ -->
+    <div id="view-industries" class="view site-page">
+      <nav class="detroit-page-nav">
+        <button class="marketing-link" onclick="navigate('home')">Content Studio</button>
+        <div class="marketing-links">
+          <button class="marketing-link" onclick="navigate('offerings')">Offerings</button>
+          <button class="marketing-link" onclick="navigate('solutions')">Solutions</button>
+          <button class="marketing-link" onclick="navigate('buy-now')">Buy Now</button>
+        </div>
+      </nav>
+      <section class="site-hero">
+        <div><div class="eyebrow">Industries</div><h1 class="site-title mt-6">Regulated Teams</h1></div>
+        <p class="site-copy">The same black-and-white operating model flexes across pharma, vaccines, medtech, diagnostics, consumer health, and affiliate organisations.</p>
+      </section>
+      <section class="marketing-band">
+        <div class="option-rail">
+          <div class="option-card dark"><div class="big-num">Rx</div><div><h3>Pharma</h3><p>Promotional HCP campaigns, MLR preparation, claim lineage, safety balance, and modular reuse.</p></div></div>
+          <div class="option-card"><div class="big-num">Vx</div><div><h3>Vaccines</h3><p>Education platforms, congress decks, phase-data summaries, audience segmentation, and local launch packs.</p></div></div>
+          <div class="option-card dark"><div class="big-num">Dx</div><div><h3>Diagnostics</h3><p>Testing pathways, evidence-based education, biomarker journeys, and clinical proof communication.</p></div></div>
+          <div class="option-card"><div class="big-num">Md</div><div><h3>MedTech</h3><p>Device education, indication-safe messaging, workflow content, product training, and proof points.</p></div></div>
+          <div class="option-card dark"><div class="big-num">Af</div><div><h3>Affiliates</h3><p>Local review packs, market adaptation, translation context, approval ownership, and go-live tracking.</p></div></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ══════════ REACH OUT PAGE ══════════ -->
+    <div id="view-reach-out" class="view site-page">
+      <nav class="detroit-page-nav">
+        <button class="marketing-link" onclick="navigate('home')">Content Studio</button>
+        <div class="marketing-links">
+          <button class="marketing-link" onclick="navigate('offerings')">Offerings</button>
+          <button class="marketing-link" onclick="navigate('solutions')">Solutions</button>
+          <button class="marketing-link" onclick="navigate('buy-now')">Buy Now</button>
+        </div>
+      </nav>
+      <section class="site-hero">
+        <div><div class="eyebrow">Reach out</div><h1 class="site-title mt-6">Book The Room</h1></div>
+        <p class="site-copy">A direct contact page for sales, pilots, stakeholder walkthroughs, and enterprise configuration conversations.</p>
+      </section>
+      <section class="page-split">
+        <form class="demo-form white-panel" onsubmit="handleDemoBooking(event)">
+          <div><div class="mini-meta">Contact form</div><h2 class="section-title mt-3">Tell us what launch flow to show.</h2></div>
+          <label>Work email</label><input id="reach-email" type="email" value="work.email@example.com">
+          <label>Market scope</label><select><option>Single brand pilot</option><option>Multi-market launch</option><option>Medical affairs workflow</option><option>Enterprise content operations</option></select>
+          <label>Message</label><textarea rows="5">We want to evaluate the AI content platform for a regulated HCP launch.</textarea>
+          <button class="editorial-btn" type="submit">Send request</button>
+          <div id="reach-status" class="text-xs text-slate-500"></div>
+        </form>
+        <div class="black-panel">
+          <div><div class="eyebrow" style="color:#fff">Next steps</div><h2 class="section-title mt-3" style="color:#fff">Map. Configure. Pilot.</h2></div>
+          <div class="space-y-5 text-white/70">
+            <p><strong class="text-white">01</strong> Map current campaign and approval bottlenecks.</p>
+            <p><strong class="text-white">02</strong> Configure personas, markets, model routing, and policy packs.</p>
+            <p><strong class="text-white">03</strong> Run a pilot campaign through the console with realistic data.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ══════════ BUY NOW PAGE ══════════ -->
+    <div id="view-buy-now" class="view site-page">
+      <nav class="detroit-page-nav">
+        <button class="marketing-link" onclick="navigate('home')">Content Studio</button>
+        <div class="marketing-links">
+          <button class="marketing-link" onclick="navigate('offerings')">Offerings</button>
+          <button class="marketing-link" onclick="navigate('solutions')">Solutions</button>
+          <button class="marketing-link" onclick="navigate('reach-out')">Reach out</button>
+        </div>
+      </nav>
+      <section class="site-hero">
+        <div><div class="eyebrow">Buy Now</div><h1 class="site-title mt-6">Choose Access</h1></div>
+        <p class="site-copy">Pricing cards are scrollable and intentionally stark, like the reference: type first, utility next, no old palette.</p>
+      </section>
+      <section class="marketing-band">
+        <div class="option-rail">
+          <div class="option-card"><div class="mini-meta">Starter</div><div><h3>Content Desk</h3><p>One brand team, content lab, DAM basics, review prompts, and analytics preview.</p></div><div><div class="big-num">$9k</div><button class="editorial-btn" onclick="navigate('home'); setTimeout(()=>scrollHomeSection('console'), 60)">Start</button></div></div>
+          <div class="option-card dark"><div class="mini-meta">Popular</div><div><h3>Launch Suite</h3><p>Cross-functional campaign operations with MLR, medical, localisation, DAM, and analytics.</p></div><div><div class="big-num">$24k</div><button class="editorial-btn light" onclick="navigate('home'); setTimeout(()=>scrollHomeSection('console'), 60)">Buy</button></div></div>
+          <div class="option-card"><div class="mini-meta">Enterprise</div><div><h3>Global Ops</h3><p>Tenant policy, super-admin governance, audit, market configuration, and enterprise onboarding.</p></div><div><div class="big-num">Custom</div><button class="editorial-btn" onclick="navigate('reach-out')">Contact</button></div></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ══════════ LOGIN ══════════ -->
+    <div id="view-login" class="view editorial-page">
+      <div class="auth-shell">
+        <div class="auth-panel-dark">
+          <div><div class="eyebrow">Secure Access</div><h1 class="hero-title mt-5" style="font-size:clamp(48px,6vw,92px)">Welcome back.</h1></div>
+          <div class="text-white/60 text-sm">Demo-only sign in for local prototype review. No credentials are sent to a third-party service.</div>
+        </div>
+        <form class="auth-form" onsubmit="handleLogin(event)">
+          <div><div class="eyebrow">Login</div><h2 class="section-title mt-2">Enter workspace</h2></div>
+          <label>Email</label>
+          <input id="login-email" type="email" value="content.lead@example.com">
+          <label>Password</label>
+          <input id="login-password" type="password" value="prototype">
+          <label>Role</label>
+          <select id="login-role"><option>Admin</option><option>Content Strategist</option><option>Medical Affairs</option><option>Compliance Reviewer</option><option>Super Admin</option></select>
+          <button class="editorial-btn mt-2" type="submit">Login</button>
+          <div id="login-status" class="text-sm text-slate-500"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ══════════ SIGNUP ══════════ -->
+    <div id="view-signup" class="view editorial-page">
+      <div class="auth-shell">
+        <div class="auth-panel-dark">
+          <div><div class="eyebrow">Create Workspace</div><h1 class="hero-title mt-5" style="font-size:clamp(44px,5.6vw,84px)">Set up content ops.</h1></div>
+          <div class="grid grid-cols-2 gap-3 text-xs text-white/70">
+            <div>SSO-ready tenants</div><div>Role-based access</div><div>MLR audit trail</div><div>Regional governance</div>
+          </div>
+        </div>
+        <form class="auth-form" onsubmit="handleSignup(event)">
+          <div><div class="eyebrow">Sign Up</div><h2 class="section-title mt-2">Request access</h2></div>
+          <label>Name</label><input id="signup-name" value="Anika Mehta">
+          <label>Work email</label><input id="signup-email" type="email" value="anika.mehta@example.com">
+          <label>Primary team</label><select id="signup-team"><option>Marketing</option><option>Medical Affairs</option><option>Regulatory / MLR</option><option>Regional Affiliate</option><option>Content Operations</option></select>
+          <label>Market</label><select><option>India</option><option>UK</option><option>US</option><option>Saudi Arabia</option><option>Global</option></select>
+          <button class="editorial-btn mt-2" type="submit">Create demo account</button>
+          <div id="signup-status" class="text-sm text-slate-500"></div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ══════════ PERSONAS ══════════ -->
+    <div id="view-personas" class="view editorial-page">
+      <section class="editorial-section">
+        <div class="flex items-end justify-between gap-6 mb-6">
+          <div><div class="eyebrow">User Personas</div><h1 class="section-title mt-2">Built for the actual content team.</h1></div>
+          <button class="editorial-btn" onclick="navigate('signup')">Invite persona</button>
+        </div>
+        <div class="grid grid-cols-4 gap-4">
+          <div class="persona-card selected" onclick="selectPersona(this, 'Owns modular assembly, reuse strategy, and channel fit across campaigns.')"><div class="role-pill">Marketing</div><div><h3 class="text-xl font-black">Content Strategist</h3><p class="text-slate-500 text-sm mt-2">Assembles eDAs, emails, congress assets, and social variants.</p></div></div>
+          <div class="persona-card" onclick="selectPersona(this, 'Owns SCP narratives, evidence hierarchy, and scientific accuracy before asset production.')"><div class="role-pill">Medical</div><div><h3 class="text-xl font-black">Medical Affairs Lead</h3><p class="text-slate-500 text-sm mt-2">Maintains claims, evidence context, and congress communication plans.</p></div></div>
+          <div class="persona-card" onclick="selectPersona(this, 'Pre-screens risk, fair balance, substantiation, references, and market-specific MLR watchouts.')"><div class="role-pill">MLR</div><div><h3 class="text-xl font-black">Compliance Reviewer</h3><p class="text-slate-500 text-sm mt-2">Protects first-pass approval and review cycle targets.</p></div></div>
+          <div class="persona-card" onclick="selectPersona(this, 'Adapts global master content for local HCP practice, regulation, and cultural nuance.')"><div class="role-pill">Affiliate</div><div><h3 class="text-xl font-black">Regional Manager</h3><p class="text-slate-500 text-sm mt-2">Localises content for India, Saudi Arabia, UK, and US.</p></div></div>
+        </div>
+      </section>
+      <section class="editorial-section split-grid">
+        <h2 class="section-title">Persona workspace preview</h2>
+        <div id="persona-detail" class="text-2xl font-black leading-tight">Owns modular assembly, reuse strategy, and channel fit across campaigns.</div>
+      </section>
+    </div>
+
+    <!-- ══════════ ADMIN PANEL ══════════ -->
+    <div id="view-admin-panel" class="view editorial-page">
+      <section class="editorial-section">
+        <div class="flex items-start justify-between mb-6">
+          <div><div class="eyebrow">Admin Panel</div><h1 class="section-title mt-2">Workspace controls.</h1></div>
+          <button class="editorial-btn" onclick="simulateAdminSave()">Save configuration</button>
+        </div>
+        <div class="grid grid-cols-4 gap-4 mb-5">
+          <div class="process-card"><div class="process-num">Users</div><h3>128 active</h3><p>23 reviewers · 41 marketers · 19 medical · 45 affiliates</p></div>
+          <div class="process-card"><div class="process-num">Queues</div><h3>17 MLR items</h3><p>5 high-risk items need compliance owner assignment.</p></div>
+          <div class="process-card"><div class="process-num">Markets</div><h3>4 enabled</h3><p>India, Saudi Arabia, UK, US with separate review owners.</p></div>
+          <div class="process-card"><div class="process-num">Models</div><h3>4 available</h3><p>Default model policy applied to all chat assistants.</p></div>
+        </div>
+        <table class="admin-table">
+          <thead><tr><th>User</th><th>Role</th><th>Market</th><th>Status</th><th>Last activity</th></tr></thead>
+          <tbody>
+            <tr><td>Anika Mehta</td><td><span class="role-pill">Admin</span></td><td>India</td><td>Active</td><td>4 min ago</td></tr>
+            <tr><td>Sarah Collins</td><td><span class="role-pill">MLR</span></td><td>UK</td><td>Reviewing</td><td>18 min ago</td></tr>
+            <tr><td>Omar Haddad</td><td><span class="role-pill">Affiliate</span></td><td>Saudi Arabia</td><td>Active</td><td>1h ago</td></tr>
+            <tr><td>Michael Grant</td><td><span class="role-pill">Medical</span></td><td>US</td><td>Invited</td><td>Pending</td></tr>
+          </tbody>
+        </table>
+        <div id="admin-save-status" class="text-sm text-slate-500 mt-3"></div>
+      </section>
+    </div>
+
+    <!-- ══════════ SUPER ADMIN ══════════ -->
+    <div id="view-super-admin" class="view editorial-page">
+      <section class="editorial-section">
+        <div class="flex items-end justify-between gap-6 mb-6">
+          <div><div class="eyebrow">Super Admin</div><h1 class="section-title mt-2">Tenant, policy, and audit governance.</h1></div>
+          <span class="role-pill">Platform Owner</span>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="black-card"><div class="eyebrow">Tenant Health</div><div><div class="text-4xl font-black">99.98%</div><p class="text-white/60 mt-2 text-sm">Workspace uptime across four configured markets.</p></div></div>
+          <div class="black-card"><div class="eyebrow">Policy Packs</div><div><div class="text-4xl font-black">12</div><p class="text-white/60 mt-2 text-sm">ABPI, FDA, SFDA, CDSCO, and internal brand governance packs.</p></div></div>
+          <div class="black-card"><div class="eyebrow">Audit Events</div><div><div class="text-4xl font-black">8.4k</div><p class="text-white/60 mt-2 text-sm">Prompt, response, approval, export, and role-change events logged.</p></div></div>
+        </div>
+      </section>
+      <section class="editorial-section">
+        <div class="grid grid-cols-2 gap-5">
+          <div>
+            <h2 class="text-2xl font-black mb-3">Tenant policy</h2>
+            <div class="space-y-2 text-sm">
+              <label class="guardrail-item"><input type="checkbox" checked><span class="guardrail-copy"><span class="guardrail-title">Require MLR export watermark</span><span class="guardrail-sub">All pre-approval drafts are marked as draft.</span></span></label>
+              <label class="guardrail-item"><input type="checkbox" checked><span class="guardrail-copy"><span class="guardrail-title">Restrict experimental concepts</span><span class="guardrail-sub">Visual Concept Studio output cannot be deployed directly.</span></span></label>
+              <label class="guardrail-item"><input type="checkbox"><span class="guardrail-copy"><span class="guardrail-title">Lock model selection by role</span><span class="guardrail-sub">Admins can enforce approved model routing.</span></span></label>
+            </div>
+          </div>
+          <table class="admin-table">
+            <thead><tr><th>Tenant</th><th>Region</th><th>Users</th><th>Risk</th></tr></thead>
+            <tbody>
+              <tr><td>Global Content Ops</td><td>Global</td><td>128</td><td>Low</td></tr>
+              <tr><td>India Affiliate</td><td>India</td><td>34</td><td>Medium</td></tr>
+              <tr><td>Saudi Affiliate</td><td>KSA</td><td>19</td><td>Medium</td></tr>
+              <tr><td>US Medical</td><td>US</td><td>41</td><td>Low</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
 
     <!-- ══════════ ADMIN DASHBOARD ══════════ -->
-    <div id="view-admin" class="view active">
+    <div id="view-admin" class="view">
       <!-- Hero Metrics -->
       <div class="grid grid-cols-4 gap-4 mb-5">
         <div class="glass-card p-4">
@@ -310,8 +933,8 @@ tailwind.config = {
           <svg class="area-chart w-full" viewBox="0 0 640 180" preserveAspectRatio="none" aria-label="Workflow throughput chart">
             <defs>
               <linearGradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stop-color="#E95722" stop-opacity=".24"/>
-                <stop offset="100%" stop-color="#E95722" stop-opacity=".02"/>
+                <stop offset="0%" stop-color="#000000" stop-opacity=".24"/>
+                <stop offset="100%" stop-color="#000000" stop-opacity=".02"/>
               </linearGradient>
             </defs>
             <path class="area" d="M0,145 C70,136 92,96 150,104 C220,116 244,62 310,72 C375,82 398,44 465,54 C535,64 575,32 640,38 L640,180 L0,180 Z"/>
@@ -418,7 +1041,7 @@ tailwind.config = {
                   <option>eDetail Aid (eDA)</option><option>Email</option><option>Remote Detailing</option><option>Social Media</option><option>Congress</option><option>Print</option>
                 </select>
                 <button onclick="clearCanvas()" class="text-xs text-red-500 border border-red-200 rounded-lg px-3 py-1.5 hover:bg-red-50">Clear</button>
-                <button onclick="submitForReview()" class="text-xs text-white rounded-lg px-3 py-1.5 font-semibold" style="background:#E95722">Submit for MLR</button>
+                <button onclick="submitForReview()" class="text-xs text-white rounded-lg px-3 py-1.5 font-semibold" style="background:#000000">Submit for MLR</button>
               </div>
             </div>
             <div class="space-y-2 min-h-16" id="assembly-canvas">
@@ -431,7 +1054,7 @@ tailwind.config = {
         <div class="col-span-2 flex flex-col gap-3">
           <div class="bg-white rounded-xl border border-slate-200 p-4">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-orange-700" style="background:#FFF0E8">CL</div>
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-orange-700" style="background:#FFFFFF">CL</div>
               <div>
                 <div class="font-bold text-slate-800 text-sm">Content Strategist</div>
                 <div class="text-xs text-slate-500">Omnichannel Content Manager · Veeva Vault</div>
@@ -494,7 +1117,7 @@ tailwind.config = {
         <div class="col-span-2 flex flex-col gap-3">
           <div class="bg-white rounded-xl border border-slate-200 p-4">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-violet-700" style="background:#FFF0E8">DA</div>
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-violet-700" style="background:#FFFFFF">DA</div>
               <div>
                 <div class="font-bold text-slate-800 text-sm">DAM Specialist</div>
                 <div class="text-xs text-slate-500">Taxonomy & Asset Governance · Global</div>
@@ -509,7 +1132,7 @@ tailwind.config = {
           </div>
           <div class="chat-panel flex-1">
             <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFFFFF">
-              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs" style="background:#E95722; color:white; font-weight:700">DA</div>
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs" style="background:#000000; color:white; font-weight:700">DA</div>
               <div><div class="font-semibold text-sm text-slate-800">DAM Taxonomy AI</div><div class="text-xs text-slate-400">Metadata, governance & discoverability</div></div>
             </div>
             <div class="chat-messages flex-1" id="chat-dam">
@@ -575,14 +1198,14 @@ tailwind.config = {
             </div>
             <div class="field-label">Core Scientific Claim / Data Point</div>
             <textarea class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm mb-2 resize-none" rows="3" id="scp-claim" placeholder="Enter the key clinical data or claim you want to communicate…"></textarea>
-            <button onclick="buildNarrative()" class="text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#E95722">Build Narrative</button>
+            <button onclick="buildNarrative()" class="text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#000000">Build Narrative</button>
           </div>
         </div>
 
         <div class="col-span-2 flex flex-col gap-3">
           <div class="bg-white rounded-xl border border-slate-200 p-4">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-teal-700" style="background:#FFF0E8">SC</div>
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-teal-700" style="background:#FFFFFF">SC</div>
               <div>
                 <div class="font-bold text-slate-800 text-sm">Medical Affairs Director</div>
                 <div class="text-xs text-slate-500">Scientific Communications · Global Oncology / Vaccines</div>
@@ -591,8 +1214,8 @@ tailwind.config = {
             <div class="mt-3 text-xs text-slate-600 leading-relaxed">Drives IMCP development, scientific narrative strategy, and congress planning. Acts as strategic thought partner interpreting emerging clinical data to inform product strategy.</div>
           </div>
           <div class="chat-panel flex-1">
-            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFF0E8">
-              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#E95722">SC</div>
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFFFFF">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#000000">SC</div>
               <div><div class="font-semibold text-sm text-slate-800">SCP / Medical Affairs AI</div><div class="text-xs text-slate-400">Evidence-based scientific narratives</div></div>
             </div>
             <div class="chat-messages flex-1" id="chat-scp">
@@ -638,7 +1261,7 @@ tailwind.config = {
                 <input type="text" class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm" placeholder="e.g. Annualised exacerbation rate reduction" id="pico-o">
               </div>
             </div>
-            <button onclick="runEvidenceSearch()" class="mt-3 text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#E95722">Run Evidence Search</button>
+            <button onclick="runEvidenceSearch()" class="mt-3 text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#000000">Run Evidence Search</button>
           </div>
 
           <!-- Evidence Results -->
@@ -667,7 +1290,7 @@ tailwind.config = {
         <div class="col-span-2 flex flex-col gap-3">
           <div class="bg-white rounded-xl border border-slate-200 p-4">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-emerald-700" style="background:#FFF0E8">EV</div>
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-emerald-700" style="background:#FFFFFF">EV</div>
               <div>
                 <div class="font-bold text-slate-800 text-sm">Medical Writer / Researcher</div>
                 <div class="text-xs text-slate-500">Evidence Synthesis · Systematic Review</div>
@@ -677,8 +1300,8 @@ tailwind.config = {
             <div class="mt-3 bg-green-50 rounded-lg p-2 text-xs text-green-700 font-medium">AI can reduce abstract screening time by up to 85%</div>
           </div>
           <div class="chat-panel flex-1">
-            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFF0E8">
-              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#E95722">EV</div>
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFFFFF">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#000000">EV</div>
               <div><div class="font-semibold text-sm text-slate-800">Evidence Synthesis AI</div><div class="text-xs text-slate-400">PICO · Systematic review · Gap analysis</div></div>
             </div>
             <div class="chat-messages flex-1" id="chat-evidence">
@@ -717,7 +1340,7 @@ tailwind.config = {
             </div>
             <div class="field-label">Email Body / HTML</div>
             <textarea class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm resize-none mb-3" rows="5" id="email-body" placeholder="Paste email HTML or body copy here for QA review…"></textarea>
-            <button onclick="runEmailQA()" class="text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#E95722">Run QA Check</button>
+            <button onclick="runEmailQA()" class="text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#000000">Run QA Check</button>
           </div>
 
           <!-- QA Results -->
@@ -743,7 +1366,7 @@ tailwind.config = {
         <div class="col-span-2 flex flex-col gap-3">
           <div class="bg-white rounded-xl border border-slate-200 p-4">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-amber-700" style="background:#FFF0E8">EQ</div>
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-amber-700" style="background:#FFFFFF">EQ</div>
               <div>
                 <div class="font-bold text-slate-800 text-sm">Digital Marketing Manager</div>
                 <div class="text-xs text-slate-500">Omnichannel Email · HCP Engagement</div>
@@ -758,7 +1381,7 @@ tailwind.config = {
           </div>
           <div class="chat-panel flex-1">
             <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFFFFF">
-              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#E95722">EQ</div>
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#000000">EQ</div>
               <div><div class="font-semibold text-sm text-slate-800">Email QA AI</div><div class="text-xs text-slate-400">Rendering · Spam · Compliance · A/B</div></div>
             </div>
             <div class="chat-messages flex-1" id="chat-email-qa">
@@ -808,7 +1431,7 @@ tailwind.config = {
             </div>
             <div class="field-label">Content to Review</div>
             <textarea class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm resize-none mb-3" rows="5" id="comp-content" placeholder="Paste the promotional content or claims you want pre-screened against ABPI/FDA guidelines…"></textarea>
-            <button onclick="runCompliance()" class="text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#E95722">Run Compliance Check</button>
+            <button onclick="runCompliance()" class="text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#000000">Run Compliance Check</button>
           </div>
 
           <!-- Results -->
@@ -849,7 +1472,7 @@ tailwind.config = {
         <div class="col-span-2 flex flex-col gap-3">
           <div class="bg-white rounded-xl border border-slate-200 p-4">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-red-700" style="background:#FFF0E8">ML</div>
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-red-700" style="background:#FFFFFF">ML</div>
               <div>
                 <div class="font-bold text-slate-800 text-sm">Regulatory Affairs Specialist</div>
                 <div class="text-xs text-slate-500">MLR Pre-Screening · ABPI / FDA / SFDA / CDSCO</div>
@@ -862,8 +1485,8 @@ tailwind.config = {
             </div>
           </div>
           <div class="chat-panel flex-1">
-            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFF0E8">
-              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#E95722">ML</div>
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFFFFF">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#000000">ML</div>
               <div><div class="font-semibold text-sm text-slate-800">Compliance AI</div><div class="text-xs text-slate-400">ABPI · FDA · SFDA · CDSCO pre-screening</div></div>
             </div>
             <div class="chat-messages flex-1" id="chat-compliance">
@@ -913,7 +1536,7 @@ tailwind.config = {
             </div>
             <div class="field-label">Global Master Content</div>
             <textarea class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm resize-none mb-3" rows="4" id="loc-source" placeholder="Paste the global master content to be localised for the selected market…"></textarea>
-            <button onclick="runLocalisation()" class="text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#E95722">Localise Content</button>
+            <button onclick="runLocalisation()" class="text-sm text-white rounded-lg px-4 py-2 font-semibold" style="background:#000000">Localise Content</button>
           </div>
 
           <!-- Output -->
@@ -933,7 +1556,7 @@ tailwind.config = {
         <div class="col-span-2 flex flex-col gap-3">
           <div class="bg-white rounded-xl border border-slate-200 p-4">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-indigo-700" style="background:#FFF0E8">LO</div>
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-indigo-700" style="background:#FFFFFF">LO</div>
               <div>
                 <div class="font-bold text-slate-800 text-sm">Regional Content Manager</div>
                 <div class="text-xs text-slate-500">Localisation · India · Saudi Arabia · UK · US</div>
@@ -946,8 +1569,8 @@ tailwind.config = {
             </div>
           </div>
           <div class="chat-panel flex-1">
-            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFF0E8">
-              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#E95722">LO</div>
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFFFFF">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold" style="background:#000000">LO</div>
               <div><div class="font-semibold text-sm text-slate-800">Localisation AI</div><div class="text-xs text-slate-400">Regional adaptation · Cultural & regulatory</div></div>
             </div>
             <div class="chat-messages flex-1" id="chat-localization">
@@ -1052,7 +1675,7 @@ tailwind.config = {
         <div class="col-span-2 flex flex-col gap-3">
           <div class="glass-card p-4">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-slate-700 icon-tile" style="background:#FFF0E8"><i data-lucide="sparkles"></i></div>
+              <div class="w-10 h-10 rounded-md flex items-center justify-center text-xs font-bold text-slate-700 icon-tile" style="background:#FFFFFF"><i data-lucide="sparkles"></i></div>
               <div>
                 <div class="font-bold text-slate-800 text-sm">Visual Concept Studio</div>
                 <div class="text-xs text-slate-500">Visual routes · prompt design · review handoff</div>
@@ -1103,8 +1726,8 @@ tailwind.config = {
             </div>
           </div>
           <div class="chat-panel flex-1">
-            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFF0E8">
-              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold icon-tile" style="background:#E95722"><i data-lucide="image-plus"></i></div>
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2" style="background:#FFFFFF">
+              <div class="w-7 h-7 rounded-md flex items-center justify-center text-xs text-white font-bold icon-tile" style="background:#000000"><i data-lucide="image-plus"></i></div>
               <div><div class="font-semibold text-sm text-slate-800">Visual Concept AI</div><div class="text-xs text-slate-400">Prompt refinement · risk notes · handoff guidance</div></div>
             </div>
             <div class="chat-messages flex-1" id="chat-media">
@@ -1190,9 +1813,21 @@ tailwind.config = {
 
 <!-- ═══════════════════ JAVASCRIPT ═══════════════════ -->
 <script>
-const MODULES = ['admin','content-lab','dam','scp','evidence','email-qa','compliance','localization','analytics','media'];
+const MODULES = ['home','offerings','solutions','industries','reach-out','buy-now','personas','login','signup','admin','admin-panel','super-admin','content-lab','dam','scp','evidence','email-qa','compliance','localization','analytics','media'];
+const MARKETING_MODULES = ['home','offerings','solutions','industries','reach-out','buy-now'];
 const TOPBAR = {
-  'admin':       ['Admin Dashboard',      'End-to-end content workflow orchestration'],
+  'home':        ['AI Content Platform',  'Marketing website · offerings, solutions, console access'],
+  'offerings':   ['Offerings',            'Public product offering page'],
+  'solutions':   ['Solutions',            'Public solution routes'],
+  'industries':  ['Industries',           'Public industry use cases'],
+  'reach-out':   ['Reach Out',            'Public demo and contact page'],
+  'buy-now':     ['Buy Now',              'Public pricing and buying page'],
+  'personas':    ['User Personas',        'Role-specific workspaces for pharma content teams'],
+  'login':       ['Login',                'Secure local demo access'],
+  'signup':      ['Sign Up',              'Create a demo workspace account'],
+  'admin':       ['Admin Dashboard',      'Production workflow orchestration'],
+  'admin-panel': ['Admin Panel',          'Users, roles, markets & workspace configuration'],
+  'super-admin': ['Super Admin',          'Tenant policy, audit and platform governance'],
   'content-lab': ['Content Lab',          'Modular content assembly · Content Strategist'],
   'dam':         ['Digital Asset Management', 'Taxonomy, governance & asset lifecycle · DAM Specialist'],
   'scp':         ['Sci Comm Platform (SCP)', 'IMCP planning & scientific narratives · Medical Affairs Director'],
@@ -1221,12 +1856,14 @@ MODULES.forEach(m => selectedModels[m] = 'gemini-3-pro-preview');
 
 // ── Navigation ──────────────────────────────────────────
 function navigate(moduleId) {
+  if (!MODULES.includes(moduleId)) moduleId = 'home';
   MODULES.forEach(m => {
-    document.getElementById('view-'+m).classList.remove('active');
-    document.getElementById('nav-'+m).classList.remove('active');
+    document.getElementById('view-'+m)?.classList.remove('active');
+    document.getElementById('nav-'+m)?.classList.remove('active');
   });
+  document.body.classList.toggle('marketing-mode', MARKETING_MODULES.includes(moduleId));
   document.getElementById('view-'+moduleId).classList.add('active');
-  document.getElementById('nav-'+moduleId).classList.add('active');
+  document.getElementById('nav-'+moduleId)?.classList.add('active');
   const [title, sub] = TOPBAR[moduleId];
   document.getElementById('topbar-title').textContent = title;
   document.getElementById('topbar-sub').textContent = sub;
@@ -1234,6 +1871,64 @@ function navigate(moduleId) {
   if (moduleId === 'dam')      loadDAMAssets();
   if (moduleId === 'analytics') loadKPIs();
   if (moduleId === 'content-lab') loadContentModules();
+  const desiredHash = moduleId === 'home' ? '' : '#' + moduleId;
+  if (location.hash !== desiredHash) {
+    history.replaceState(null, '', location.pathname + desiredHash);
+  }
+}
+
+function handleLogin(event) {
+  event.preventDefault();
+  const role = document.getElementById('login-role').value;
+  document.getElementById('login-status').textContent = `Demo login successful as ${role}. Opening the workspace dashboard.`;
+  setTimeout(() => navigate(role === 'Super Admin' ? 'super-admin' : 'admin'), 500);
+}
+
+function handleSignup(event) {
+  event.preventDefault();
+  const name = document.getElementById('signup-name').value || 'New user';
+  const team = document.getElementById('signup-team').value;
+  document.getElementById('signup-status').textContent = `${name} added to the ${team} demo workspace. Admin approval is simulated.`;
+}
+
+function selectPersona(card, detail) {
+  document.querySelectorAll('.persona-card').forEach(item => item.classList.remove('selected'));
+  card.classList.add('selected');
+  document.getElementById('persona-detail').textContent = detail;
+}
+
+function simulateAdminSave() {
+  document.getElementById('admin-save-status').textContent = 'Configuration saved locally for this prototype session.';
+}
+
+function scrollHomeSection(sectionId) {
+  if (!document.getElementById('view-home')?.classList.contains('active')) {
+    navigate('home');
+  }
+  setTimeout(() => {
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 40);
+}
+
+function handleConsoleSignup(event) {
+  event.preventDefault();
+  const name = document.getElementById('console-signup-name').value || 'New user';
+  const role = document.getElementById('console-signup-role').value;
+  document.getElementById('console-signup-status').textContent = `${name} added as ${role}. Opening the product console.`;
+  setTimeout(() => navigate(role === 'Admin' ? 'admin-panel' : 'personas'), 550);
+}
+
+function handleConsoleLogin(event) {
+  event.preventDefault();
+  const role = document.getElementById('console-login-role').value;
+  document.getElementById('console-login-status').textContent = `Logged in as ${role}. Loading console.`;
+  setTimeout(() => navigate(role === 'Super Admin' ? 'super-admin' : 'admin'), 450);
+}
+
+function handleDemoBooking(event) {
+  event.preventDefault();
+  const status = event.currentTarget.querySelector('#demo-status, #reach-status');
+  if (status) status.textContent = 'Demo request captured locally for this prototype.';
 }
 
 // ── AI Chat ─────────────────────────────────────────────
@@ -1476,8 +2171,8 @@ async function loadAdminData() {
     const steps = Object.keys(data.modules);
     pipelineRow.innerHTML = '';
     const colors = {
-      'content-lab':'#E95722','dam':'#E95722','scp':'#E95722','evidence':'#E95722',
-      'email-qa':'#E95722','compliance':'#B94115','localization':'#E95722','analytics':'#E95722'
+      'content-lab':'#000000','dam':'#000000','scp':'#000000','evidence':'#000000',
+      'email-qa':'#000000','compliance':'#000000','localization':'#000000','analytics':'#000000'
     };
     const detailText = {
       'content-lab': 'Assemble',
@@ -1505,7 +2200,7 @@ async function loadAdminData() {
       step.className = `pipeline-step ${isWarning ? 'warning' : ''}`;
       step.onclick = () => navigate(key);
       step.innerHTML = `
-        <div class="pipeline-dot" title="${mod.label}" style="${isWarning ? '' : `background:linear-gradient(135deg,#F48655,${color});`}">
+        <div class="pipeline-dot" title="${mod.label}" style="${isWarning ? '' : `background:linear-gradient(135deg,#000000,${color});`}">
           <i data-lucide="${workflowIcon(key)}"></i>
         </div>
         <div class="pipeline-title">
@@ -1521,7 +2216,7 @@ async function loadAdminData() {
     grid.innerHTML = '';
     Object.entries(data.modules).forEach(([key, mod]) => {
       const isWarning = mod.status === 'warning';
-      const color = isWarning ? '#B94115' : (colors[key] || '#5F6368');
+      const color = isWarning ? '#000000' : (colors[key] || '#5F6368');
       const card = document.createElement('div');
       card.className = 'bg-white rounded-xl border border-slate-200 p-4 cursor-pointer hover:shadow-md transition-shadow';
       card.onclick = () => navigate(key);
@@ -1660,8 +2355,8 @@ function renderCanvas() {
     return;
   }
   const typeColors = {
-    'Claim':'#FFF0E8','Safety':'#FFF0E8','Brand':'#FFF0E8','Legal':'#FFF0E8',
-    'Visual':'#FFF0E8','Reference':'#FFF0E8','CTA':'#FFF0E8'
+    'Claim':'#FFFFFF','Safety':'#FFFFFF','Brand':'#FFFFFF','Legal':'#FFFFFF',
+    'Visual':'#FFFFFF','Reference':'#FFFFFF','CTA':'#FFFFFF'
   };
   canvas.innerHTML = assembledModules.map((m, i) => `
     <div class="canvas-module flex items-center justify-between">
@@ -1773,7 +2468,7 @@ const conceptBriefs = {
     ratio: '16:9',
     market: 'India',
     owner: 'Content Lab',
-    prompt: 'Create a clean HCP email hero concept for AsterResp COPD education in India: abstract airway health metaphor, calm clinical workspace, warm orange accent, clear space for approved headline and CTA, no product pack, no patient identity, no embedded efficacy claim text.'
+    prompt: 'Create a clean HCP email hero concept for AsterResp COPD education in India: abstract airway health metaphor, calm clinical workspace, black-and-white contrast, clear space for approved headline and CTA, no product pack, no patient identity, no embedded efficacy claim text.'
   },
   oncopath: {
     format: 'Infographic concept',
@@ -1794,7 +2489,7 @@ const conceptBriefs = {
     ratio: '16:9',
     market: 'Global',
     owner: 'Content Operations',
-    prompt: 'Create a modern AI content creation workflow visual for pharma: concept generation, modular content assembly, DAM governance, evidence linking, MLR review, localisation, and analytics shown as connected dashboard cards. Light mode, refined orange accent, no brand logos, no patient imagery, professional enterprise UI.'
+    prompt: 'Create a modern AI content creation workflow visual for pharma: concept generation, modular content assembly, DAM governance, evidence linking, MLR review, localisation, and analytics shown as connected dashboard cards. Light mode, refined black-and-white contrast, no brand logos, no patient imagery, professional enterprise UI.'
   }
 };
 
@@ -1847,11 +2542,11 @@ function copyConceptHandoff(showStatus = true) {
 function useMediaPreset(kind = 'workflow') {
   const prompts = {
     'hcp-hero': conceptBriefs.asterresp.prompt,
-    workflow: 'Create a modern AI content creation workflow visual for pharma: concept generation, modular content assembly, DAM governance, evidence linking, MLR review, localisation, and analytics shown as connected dashboard cards. Light mode, refined orange accent, no brand logos, no patient imagery, professional enterprise UI.',
+    workflow: 'Create a modern AI content creation workflow visual for pharma: concept generation, modular content assembly, DAM governance, evidence linking, MLR review, localisation, and analytics shown as connected dashboard cards. Light mode, refined black-and-white contrast, no brand logos, no patient imagery, professional enterprise UI.',
     infographic: conceptBriefs.oncopath.prompt,
     storyboard: conceptBriefs.novavax.prompt,
-    social: 'Create a square HCP-safe social concept for respiratory education: abstract breath pathway, clean white background, warm orange accent, minimal scientific shapes, no patients, no product pack, no efficacy text, space for approved headline.',
-    booth: 'Create a congress booth loop concept frame: modular content cards flowing through evidence, MLR, localisation, and analytics. Ambient enterprise display, light clinical palette, warm orange accents, no claims, no logos, no identifiable people.'
+    social: 'Create a square HCP-safe social concept for respiratory education: abstract breath pathway, clean white background, black-and-white contrast, minimal scientific shapes, no patients, no product pack, no efficacy text, space for approved headline.',
+    booth: 'Create a congress booth loop concept frame: modular content cards flowing through evidence, MLR, localisation, and analytics. Ambient enterprise display, light clinical palette, black-and-white contrasts, no claims, no logos, no identifiable people.'
   };
   document.getElementById('media-prompt').value = prompts[kind] || prompts.workflow;
   copyConceptHandoff(false);
@@ -1958,6 +2653,10 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     .catch(() => refreshIcons());
   refreshIcons();
+  const initialRoute = location.hash.replace('#', '');
+  if (initialRoute && MODULES.includes(initialRoute)) {
+    navigate(initialRoute);
+  }
 });
 </script>
 </body>
