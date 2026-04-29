@@ -15,6 +15,6 @@ fi
 
 export GEMINI_MODEL="${GEMINI_MODEL:-gemini-3-pro-preview}"
 
-echo "Starting AI Content Platform on http://localhost:8000"
+echo "Starting Proofline AI backend on http://localhost:8000"
 echo "Gemini model: $GEMINI_MODEL"
-python3 -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+python3 -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
