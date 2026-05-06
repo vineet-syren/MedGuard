@@ -1,2 +1,2 @@
-"""Proofline FastAPI backend package."""
+"""MedGuard FastAPI backend package."""
 

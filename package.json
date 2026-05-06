@@ -1,5 +1,5 @@
 {
-  "name": "proofline",
+  "name": "medguard",
   "private": true,
   "type": "module",
   "scripts": {
@@ -17,4 +17,3 @@
     "typescript": "^5.9.0"
   }
 }
-

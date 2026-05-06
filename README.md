@@ -1,6 +1,17 @@
-# Proofline
+# MedGuard
 
-Proofline is migrating from a single static HTML/FastAPI prototype into a Nuxt + FastAPI architecture.
+MedGuard is a Nuxt + FastAPI production-grade application for regulated content operations.
+
+The current product direction is based on a life-sciences content market scan. MedGuard is positioned as an agentic regulated content engineering layer, not a replacement for DAM, CRM, MLR, or authoring systems. See `MARKET_RESEARCH.md`.
+
+The newest downstream governance modules are:
+
+- Claims Governance
+- Compliance Validation
+- Responsible AI
+- Workflow Orchestration
+- Integration Layer
+- Pilot Readiness
 
 ## Architecture Call
 
@@ -34,4 +45,3 @@ The Nuxt app expects the FastAPI backend at `http://127.0.0.1:8000`. Override wi
 ```bash
 AI_API_BASE=http://127.0.0.1:8000 npm run dev
 ```
-

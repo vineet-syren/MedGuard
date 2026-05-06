@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-label="Respivara hero creative sample">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#eef4ff"/>
+      <stop offset="1" stop-color="#ecfdf3"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="540" rx="28" fill="url(#bg)"/>
+  <rect x="72" y="74" width="816" height="392" rx="24" fill="#ffffff" opacity=".86"/>
+  <circle cx="232" cy="270" r="96" fill="#d1fadf"/>
+  <path d="M196 270c42-86 116-86 74 0 42 86-32 86-74 0z" fill="#027a48" opacity=".72"/>
+  <path d="M255 270c42-86 116-86 74 0 42 86-32 86-74 0z" fill="#175cd3" opacity=".42"/>
+  <text x="390" y="206" fill="#12326f" font-family="Arial, sans-serif" font-size="38" font-weight="600">Respivara clinical</text>
+  <text x="390" y="250" fill="#12326f" font-family="Arial, sans-serif" font-size="38" font-weight="600">update</text>
+  <text x="390" y="294" fill="#475467" font-family="Arial, sans-serif" font-size="20">Benefit claims stay linked to</text>
+  <text x="390" y="322" fill="#475467" font-family="Arial, sans-serif" font-size="20">approved evidence and PI context.</text>
+  <rect x="390" y="348" width="390" height="58" rx="12" fill="#f6fef9" stroke="#abefc6"/>
+  <text x="414" y="383" fill="#027a48" font-family="Arial, sans-serif" font-size="18">Safety statement visible near claim</text>
+</svg>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8" />
+<title>Respivara Leave Behind Validation Matrix</title>
+<style>
+  body{margin:0;background:#fbfcff;color:#172033;font-family:Inter,Arial,sans-serif}
+  main{max-width:1120px;margin:auto;padding:34px}
+  section{background:#fff;border:1px solid #dfe7f2;border-radius:14px;padding:20px;margin:14px 0}
+  h1,h2{margin:0 0 8px;color:#173b75}
+  p,li{line-height:1.55}
+  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+  th,td{border:1px solid #dce5ef;padding:10px;text-align:left;vertical-align:top}
+  th{background:#eef4ff;color:#173b75}
+</style>
+<main>
+  <p>Validation matrix · DOC-VAL-RESP-LB-073 · HCP Leave Behind · version 1.0</p>
+  <h1>Respivara HCP Leave Behind Validation Matrix and Test Cases</h1>
+
+  <section>
+    <h2>KPI and Test Case Matrix</h2>
+    <table>
+      <tr><th>Test name</th><th>KPI target</th><th>Checks</th><th>Missing area logic</th><th>Owner</th></tr>
+      <tr><td>Brief completeness</td><td>95% required fields complete</td><td>Audience, trigger, format, source packet, owner matrix, launch window, distribution rule.</td><td>Any missing owner, source, or distribution rule blocks Stage 2.</td><td>Workflow owner</td></tr>
+      <tr><td>Claim fidelity</td><td>100% claim-to-library match</td><td>Claim ID, wording, reference ID, expiry, permitted use, local market eligibility.</td><td>Unmapped claim, altered claim strength, or expired claim blocks medical review.</td><td>Claims governance lead</td></tr>
+      <tr><td>Evidence alignment</td><td>90% or higher semantic alignment</td><td>Endpoint, population, comparator, limitation, statistical support, citation presence.</td><td>Unsupported endpoint, population drift, or missing limitation triggers rework.</td><td>Medical reviewer</td></tr>
+      <tr><td>Safety prominence</td><td>Safety readability score 92%+</td><td>Safety text size, contrast, adjacency, PI QR, adverse event cue, page placement.</td><td>Hidden, cropped, low-contrast, or footnote-only safety text blocks compliance.</td><td>Compliance reviewer</td></tr>
+      <tr><td>Local disclaimer</td><td>100% mandatory local text present</td><td>India disclaimer, local PI route, affiliate review, adverse event reporting, HCP-only note.</td><td>Missing disclaimer or stale local PI QR blocks local approval.</td><td>Local market reviewer</td></tr>
+      <tr><td>Print production QA</td><td>Zero critical print defects</td><td>Bleed, trim, safe area, QR scan, PDF/A, image resolution, footer, version lock.</td><td>QR failure, unsafe crop, or mismatch with approved Vault version blocks publish.</td><td>QA specialist</td></tr>
+      <tr><td>Distribution control</td><td>100% CRM record completeness</td><td>HCP-only account, consent, representative call trigger, asset ID, version, distribution date.</td><td>Any patient-facing or non-consented distribution path blocks activation.</td><td>CRM operations</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Validation Documents Considered</h2>
+    <ul>
+      <li>DOC-CLAIM-RESP-008: approved claim library and permitted variants.</li>
+      <li>DOC-SMPC-RESP-2026: label, indication, population, and safety anchors.</li>
+      <li>DOC-SAF-RESP-022: safety statement and fair-balance placement rules.</li>
+      <li>DOC-LOCAL-RESP-LB-075: India disclaimer and affiliate approval requirements.</li>
+      <li>DOC-QA-RESP-LB-074: print proof, QR, accessibility, PDF/A, and distribution readiness evidence.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Stage Coverage</h2>
+    <table>
+      <tr><th>Stage</th><th>Primary validation outcome</th><th>Required evidence</th></tr>
+      <tr><td>Stage 1</td><td>Brief is complete and source packet is ready.</td><td>Brief plan, source packet, owner matrix.</td></tr>
+      <tr><td>Stage 2</td><td>Leave-behind content master matches brief and approved sources.</td><td>Content master, claim matrix, safety pack.</td></tr>
+      <tr><td>Stage 3</td><td>Medical and regulatory claims are supportable.</td><td>Claim library, CSR, SmPC/PI, evidence table.</td></tr>
+      <tr><td>Stage 4</td><td>Global compliance, policy, privacy, and approval authority pass.</td><td>Policy pack, disclaimer, audit record.</td></tr>
+      <tr><td>Stage 5-6</td><td>India local disclaimer and affiliate approval are complete.</td><td>Local disclaimer, local PI QR, affiliate sign-off.</td></tr>
+      <tr><td>Stage 7-8</td><td>Print QA and distribution readiness pass.</td><td>PDF proof, QR scan, version lock, CRM distribution control.</td></tr>
+    </table>
+  </section>
+</main>
+</html>

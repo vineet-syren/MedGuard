@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="480" viewBox="0 0 720 480">
+  <rect width="720" height="480" rx="28" fill="#f8fafc"/>
+  <rect x="54" y="48" width="612" height="384" rx="24" fill="#fff" stroke="#d8e2ec"/>
+  <text x="86" y="104" font-family="Arial" font-size="30" font-weight="700" fill="#17324d">Respivara Claim Matrix</text>
+  <g font-family="Arial" font-size="14">
+    <rect x="86" y="148" width="548" height="44" rx="12" fill="#eef4ff"/>
+    <text x="112" y="176" fill="#1d4ed8">Claim ID</text><text x="230" y="176" fill="#1d4ed8">Reference</text><text x="390" y="176" fill="#1d4ed8">Market</text><text x="510" y="176" fill="#1d4ed8">Status</text>
+    <rect x="86" y="206" width="548" height="44" rx="12" fill="#fff"/>
+    <rect x="86" y="264" width="548" height="44" rx="12" fill="#fff"/>
+    <rect x="86" y="322" width="548" height="44" rx="12" fill="#fff"/>
+    <text x="112" y="234" fill="#334155">CLM-008</text><text x="230" y="234" fill="#334155">CSR-301</text><text x="390" y="234" fill="#334155">Global</text><text x="510" y="234" fill="#067647">Approved</text>
+    <text x="112" y="292" fill="#334155">EML-042</text><text x="230" y="292" fill="#334155">PI-v4.2</text><text x="390" y="292" fill="#334155">India</text><text x="510" y="292" fill="#b54708">Watch</text>
+    <text x="112" y="350" fill="#334155">WEB-114</text><text x="230" y="350" fill="#334155">SAF-022</text><text x="390" y="350" fill="#334155">US</text><text x="510" y="350" fill="#067647">Approved</text>
+  </g>
+</svg>

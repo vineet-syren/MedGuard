@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="480" viewBox="0 0 720 480">
+  <rect width="720" height="480" rx="28" fill="#f8fafc"/>
+  <rect x="52" y="50" width="616" height="380" rx="22" fill="#fff" stroke="#d8e2ec"/>
+  <text x="86" y="108" font-family="Arial" font-size="28" font-weight="700" fill="#17324d">Immunava Publication Summary</text>
+  <text x="86" y="140" font-family="Arial" font-size="16" fill="#526173">Visual abstract with endpoint, limitations and citations</text>
+  <path d="M92 348 C160 250 220 282 280 210 S410 172 482 248 590 212 628 160" fill="none" stroke="#2563eb" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="280" cy="210" r="10" fill="#14b8a6"/>
+  <circle cx="482" cy="248" r="10" fill="#14b8a6"/>
+  <rect x="86" y="178" width="190" height="52" rx="14" fill="#eef4ff"/>
+  <rect x="86" y="252" width="190" height="52" rx="14" fill="#eef4ff"/>
+  <text x="108" y="210" font-family="Arial" font-size="15" fill="#1d4ed8">Endpoint fidelity</text>
+  <text x="108" y="284" font-family="Arial" font-size="15" fill="#1d4ed8">Citation completeness</text>
+</svg>

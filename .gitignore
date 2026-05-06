@@ -1,0 +1,14 @@
+node_modules/
+
+# Local OS/editor files
+.DS_Store
+**/.DS_Store
+
+# Nuxt build and generated cache
+.nuxt/
+.output/
+node_modules/.cache/
+
+# Python generated files
+__pycache__/
+*.py[cod]

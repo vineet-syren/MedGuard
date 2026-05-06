@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8" />
+<title>Respivara HCP Leave Behind Brief and Plan</title>
+<style>
+  body{margin:0;background:#f7fafc;color:#172033;font-family:Inter,Arial,sans-serif}
+  main{max-width:1100px;margin:auto;padding:34px}
+  section{background:#fff;border:1px solid #dce5ef;border-radius:14px;padding:20px;margin:14px 0}
+  h1,h2,h3{margin:0 0 8px;color:#173b75}
+  p,li{line-height:1.55}
+  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+  th,td{border:1px solid #dce5ef;padding:10px;text-align:left;vertical-align:top}
+  th{background:#eef4ff;color:#173b75}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .chip{border:1px solid #dce5ef;border-radius:12px;background:#f8fbff;padding:12px}
+</style>
+<main>
+  <p>Veeva CRM intake · RESP-IN-LB-Q2 · controlled planning record · version 1.0</p>
+  <h1>Respivara HCP Leave Behind Brief and Plan</h1>
+
+  <section class="grid">
+    <div class="chip"><strong>Content type</strong><br>HCP Leave Behind</div>
+    <div class="chip"><strong>Market</strong><br>India</div>
+    <div class="chip"><strong>Use context</strong><br>Representative follow-up after HCP call</div>
+    <div class="chip"><strong>Format</strong><br>Two-page PDF / print proof</div>
+  </section>
+
+  <section>
+    <h2>Objective</h2>
+    <p>Create a controlled two-page HCP leave-behind that reinforces the representative discussion after a Respivara call. The material must help HCPs recall patient-selection criteria, approved evidence context, safety considerations, and local prescribing-information access. It must not function as patient-facing material and must not introduce unsupported efficacy, speed, comparative, or durability claims.</p>
+  </section>
+
+  <section>
+    <h2>Audience, Trigger, and Distribution Plan</h2>
+    <table>
+      <tr><th>Area</th><th>Planned value</th><th>Control</th></tr>
+      <tr><td>Audience</td><td>Consented pulmonologists and high-prescribing GPs in India who receive an in-person or remote representative call.</td><td>Distribution limited to approved HCP accounts in Veeva CRM; no patient or public use.</td></tr>
+      <tr><td>Trigger</td><td>Representative follow-up after patient-selection discussion or HCP request for approved summary material.</td><td>CRM call record must capture asset ID, date, representative, and HCP account.</td></tr>
+      <tr><td>Format</td><td>Two-page PDF, A4 print-ready, optional tablet view, QR to local PI and approved HCP resource.</td><td>Bleed, trim, safe area, QR scan, and PDF/A proof required before publish.</td></tr>
+      <tr><td>Success measures</td><td>HCP follow-up request rate, rep completion rate, QR scan rate, no MLR rework after first print proof.</td><td>Metrics tied to CRM campaign object and post-distribution audit event.</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Page-by-Page Plan</h2>
+    <table>
+      <tr><th>Page</th><th>Purpose</th><th>Required modules</th><th>Validation rule</th></tr>
+      <tr><td>Page 1</td><td>Summarize eligible patient profile and approved clinical discussion point.</td><td>Headline, patient-selection criteria, approved claim module, reference callout, representative-use note.</td><td>Benefit content cannot visually dominate safety and PI references across the full piece.</td></tr>
+      <tr><td>Page 2</td><td>Provide safety, PI, evidence, and follow-up controls.</td><td>Safety statement, local PI QR/link, evidence sidebar, adverse event reporting cue, local disclaimer, MLR footer.</td><td>Safety and PI must remain readable in printed proof and tablet view.</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Required Source Packet</h2>
+    <ul>
+      <li>DOC-CLAIM-RESP-008: approved patient-selection and safety-adjacent claim variants.</li>
+      <li>DOC-SMPC-RESP-2026: indication, population, warnings, and prescribing-information anchors.</li>
+      <li>DOC-CSR-RESP-P3-118: clinical evidence context, endpoint limitations, and statistics notes.</li>
+      <li>DOC-SAF-RESP-022: approved safety statement and fair-balance placement rules.</li>
+      <li>DOC-VAL-RESP-LB-073: HCP leave-behind validation matrix, KPIs, and test cases.</li>
+      <li>DOC-QA-RESP-LB-074: PDF proof, QR, print, accessibility, and distribution QA evidence.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Acceptance Criteria</h2>
+    <table>
+      <tr><th>Gate</th><th>Pass condition</th><th>Block condition</th></tr>
+      <tr><td>Brief readiness</td><td>Audience, trigger, format, source packet, owners, and success measures complete.</td><td>Missing source, missing distribution control, or unclear HCP-only use.</td></tr>
+      <tr><td>Content creation</td><td>Two-page content master uses approved claims, safety, PI QR, and local disclaimer.</td><td>Unsupported standalone claims or missing safety/PI content.</td></tr>
+      <tr><td>Medical and compliance</td><td>Claim, evidence, safety, policy, and MLR footer controls pass.</td><td>Evidence mismatch, fair-balance issue, prohibited distribution wording.</td></tr>
+      <tr><td>QA and publish</td><td>PDF proof, QR scan, print specs, version lock, and distribution readiness pass.</td><td>QR failure, unsafe print crop, stale version, or incomplete CRM distribution record.</td></tr>
+    </table>
+  </section>
+</main>
+</html>

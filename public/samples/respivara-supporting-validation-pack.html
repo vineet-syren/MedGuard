@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8" />
+<title>Respivara Supporting Validation Pack</title>
+<style>
+  body{margin:0;background:#fbfcff;color:#172033;font-family:Inter,Arial,sans-serif}
+  main{max-width:1080px;margin:auto;padding:34px}
+  section{background:#fff;border:1px solid #dfe7f2;border-radius:14px;padding:20px;margin:14px 0}
+  h1,h2{margin:0 0 8px;color:#173b75}
+  p,li{line-height:1.55}
+  table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+  th,td{border:1px solid #dce5ef;padding:10px;text-align:left;vertical-align:top}
+  th{background:#eef4ff;color:#173b75}
+</style>
+<main>
+  <p>Validation source bundle · RESP-IN-SUPPORT-Q2 · approved evidence set · version 1.3</p>
+  <h1>Respivara Supporting Documents and Validation Alignment Pack</h1>
+
+  <section>
+    <h2>Bundle Contents</h2>
+    <table>
+      <tr><th>Document</th><th>Controlled content</th><th>Validation role</th></tr>
+      <tr><td>DOC-CLAIM-RESP-008</td><td>Approved claim matrix, permitted variants, owner, expiry, reference ID, and permitted market.</td><td>Locks email and CLM claim wording, prevents unsupported variants, and flags expiry risk.</td></tr>
+      <tr><td>DOC-SMPC-RESP-2026</td><td>Indication, population, dosing context, warnings, contraindications, and local PI anchors.</td><td>Checks label alignment and prevents population or indication expansion.</td></tr>
+      <tr><td>DOC-CSR-RESP-P3-118</td><td>Clinical study synopsis with endpoint, comparator, population, limitations, and statistics metadata.</td><td>Supports evidence and reference validation without allowing unqualified superiority or duration claims.</td></tr>
+      <tr><td>DOC-SAF-RESP-022</td><td>Safety statement library, fair-balance placement rules, adverse event cue, and risk disclosure controls.</td><td>Controls safety adjacency in email, mandatory safety screen in CLM, and compliance approval.</td></tr>
+      <tr><td>DOC-EMAIL-QA-RESP-062</td><td>Litmus rendering, link, tracking, spam, accessibility, mobile, and image-load evidence.</td><td>Feeds Stage 7 QA and Stage 8 publish readiness for email assets.</td></tr>
+      <tr><td>DOC-CRM-META-RESP-065</td><td>Audience logic, consent, suppression timestamp, CRM fields, UTM taxonomy, owner matrix, and rollback contact.</td><td>Feeds operational readiness and publish-gate validation across Email and CLM.</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Content-Type Alignment</h2>
+    <table>
+      <tr><th>Content type</th><th>Primary source</th><th>Supporting validation set</th><th>Critical pass condition</th></tr>
+      <tr><td>Campaign Brief</td><td>Respivara campaign brief, audience plan, owner matrix, launch window.</td><td>Claim library, evidence plan, safety pack, CRM metadata, India local overlay.</td><td>Brief must freeze the exact document bundle before Stage 2 content generation.</td></tr>
+      <tr><td>Email</td><td>Approved email copy deck with subject, preheader, hero, claim, CTA, safety footer.</td><td>Claim library, safety/PI, Litmus QA, CRM consent and suppression, tracking map.</td><td>No email can publish with broken PI/unsubscribe links or hidden safety text.</td></tr>
+      <tr><td>CLM / eDetail Aid</td><td>Screen storyboard, rep talk track, reference drawer appendix, safety screen.</td><td>Claim matrix, CSR synopsis, SmPC/PI, local disclaimer, Veeva CRM package metadata.</td><td>Every claim-bearing screen must expose source ID, limitation, safety context, and approved-use metadata.</td></tr>
+      <tr><td>HCP Leave Behind</td><td>Two-page HCP-only PDF/print content master with patient-selection summary, evidence sidebar, safety block, PI QR, local disclaimer, and MLR footer.</td><td>Leave-behind validation matrix, claim library, safety/PI, local disclaimer, print QA, QR proof, distribution control.</td><td>No printed or PDF proof can publish until claim fidelity, safety readability, QR scan, print specs, and HCP-only distribution controls pass.</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>Gate Use</h2>
+    <ul>
+      <li>Stage 1 freezes the brief, source packet, and content-type alignment table.</li>
+      <li>Stage 2 uses the frozen packet to validate generated email and CLM content against approved source documents.</li>
+      <li>Stages 3 and 4 validate medical, regulatory, compliance, privacy, and fair-balance requirements.</li>
+      <li>Stages 5 and 6 apply India local disclaimer, glossary, semantic-drift, and affiliate approval checks.</li>
+      <li>Stages 7 and 8 validate Veeva CRM package readiness, Litmus QA, publish controls, rollback plan, and post-launch monitoring.</li>
+    </ul>
+  </section>
+</main>
+</html>
