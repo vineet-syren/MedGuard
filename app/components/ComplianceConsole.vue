@@ -52,7 +52,7 @@
           <p v-if="authError" class="form-alert">{{ authError }}</p>
         </form>
         <div class="syrencloud-credit">
-          <img src="/syren-logo.svg" alt="Syren" />
+          <img :src="publicAsset('/syren-logo.svg')" alt="Syren" />
           <small>A product of <strong>Syren</strong></small>
         </div>
       </div>
@@ -1241,6 +1241,11 @@ type DocumentCompareResult = { documents: LibraryDocument[]; shared_taxonomy: st
 type StageOutputDocument = { id: string; stage_id: string; stage: string; title: string; document_type: string; version: string; status: string; created_by: string; created_at: string; content: string; next_stage_id: string; audit_id: string; source_documents: string[] }
 
 useHead({ title: 'MedGuard' })
+
+const publicAsset = (path: string) => {
+  const baseURL = useRuntimeConfig().app.baseURL || '/'
+  return `${baseURL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`
+}
 
 const activeView = ref('dashboard')
 const currentUser = ref<AppUser | null>(null)
