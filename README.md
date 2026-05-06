@@ -1,47 +1,34 @@
-# MedGuard
+# MedGuard Backend for Vercel
 
-MedGuard is a Nuxt + FastAPI production-grade application for regulated content operations.
+This branch is a backend-only Vercel deployment target for the MedGuard FastAPI service.
 
-The current product direction is based on a life-sciences content market scan. MedGuard is positioned as an agentic regulated content engineering layer, not a replacement for DAM, CRM, MLR, or authoring systems. See `MARKET_RESEARCH.md`.
+## Vercel project settings
 
-The newest downstream governance modules are:
+Create a separate Vercel project from this repository and use this branch as the production branch:
 
-- Claims Governance
-- Compliance Validation
-- Responsible AI
-- Workflow Orchestration
-- Integration Layer
-- Pilot Readiness
-
-## Architecture Call
-
-Nuxt is the best fit for the product frontend, marketing site, console shell, SSR, and lightweight BFF/server routes.
-
-FastAPI + Pydantic is the better fit for agentic AI backend services because the product needs streaming, schema-first agent outputs, RAG retrieval, MCP tool contracts, auditability, and multi-agent orchestration.
-
-So the chosen stack is:
-
-- `Nuxt`: frontend, public website, console, server-side BFF proxy routes.
-- `FastAPI`: AI service boundary.
-- `Pydantic`: request/response schemas, agent plans, RAG documents, MCP tool contracts.
-
-## Run
-
-Backend:
-
-```bash
-python3 -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+```text
+Branch: codex/vercel-backend
+Framework Preset: Other
+Root Directory: /
+Build Command: leave empty
+Output Directory: leave empty
+Install Command: leave default
 ```
 
-Frontend:
+## Required environment variables
 
-```bash
-npm install
-npm run dev
+Set these in Vercel Project Settings -> Environment Variables:
+
+```text
+GEMINI_API_KEY=your_gemini_key
+GEMINI_MODEL=gemini-3-pro-preview
+FRONTEND_URL=https://your-frontend-vercel-domain.vercel.app
 ```
 
-The Nuxt app expects the FastAPI backend at `http://127.0.0.1:8000`. Override with:
+After deployment, test:
 
-```bash
-AI_API_BASE=http://127.0.0.1:8000 npm run dev
+```text
+https://your-backend-vercel-domain.vercel.app/api/health
 ```
+
+Then set the frontend project's `NUXT_AI_API_BASE` to the backend Vercel URL and redeploy the frontend.
